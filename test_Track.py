@@ -22,6 +22,14 @@ class TestTrack(unittest.TestCase):
         for num in [2,3]:
             self.assertIn(str(num), str(self.t.chords[1]))
 
+    def test_remove_note(self):
+        self.t = track.Track()
+        self.t.extend_to(5)
+        self.t.add_note(1,2,track.Note(3))
+        self.t.remove_note(1,2)
+        for num in [2,3]:
+            self.assertNotIn(str(num), str(self.t.chords[1]))
+
 class TestChord(unittest.TestCase):
     def setUp(self):
         self.c = track.Chord()

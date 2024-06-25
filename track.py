@@ -51,3 +51,9 @@ class Track:
         if x >= len(self.chords):
             raise Exception(f"Track Error: chord {x} is out of range")
         self.chords[x].add_note(p,note)
+
+    def remove_note(self,x,p):
+        if x >= len(self.chords):
+            raise Exception(f"Track Error: chord {x} is out of range")
+        self.chords[x].remove_note(p)
+
