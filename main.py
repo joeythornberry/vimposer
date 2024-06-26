@@ -10,7 +10,7 @@ stdscr = curses.initscr()
 curses.noecho()
 
 w = window.Window()
-w.set_dimensions(3,13,5,35)
+w.set_dimensions(0,20,0,60)
 
 f = frontend.Frontend(w)
 
@@ -20,10 +20,12 @@ km = KeyboardManager.KeyboardManager(send_keys)
 
 v = vapi.VimposerAPI(f,km)
 v.add_track()
-v.extend_to(10)
+v.extend_to(60)
 
 init.init(v)
-v.create_note(5,5,5)
+v.create_note(2,4,4)
+v.create_note(4,8,4)
+v.create_note(5,12,4)
 v.f.draw_window_border()
 v.paint_entire_screen()
 v.km.listen(stdscr.getkey)
