@@ -18,10 +18,10 @@ class VimposerAPI:
         self.tracks : list[track.Track] = []
         self.current_track = 0
         self.pix = pixels.PixelList()
+        self.length = 0
     
     def extend_to(self,length):
-        for t in self.tracks:
-            t.extend_to(length)
+        self.length = length
 
     def add_track(self):
         self.tracks.append(track.Track())
@@ -38,9 +38,11 @@ class VimposerAPI:
         else:
             return self.get_background_drawable(p,x)
 
+    def set_length(self, length):
+        self.length = length
+        
     def paint_entire_screen(self):
-        width = len(self.tracks[0].chords)
-        for x in range(width):
+        for x in range(self.length):
             for p in range(128):
                 d = self.get_pixel(p,x)
                 self.f.paint_pixel(p,x,d)

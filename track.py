@@ -33,27 +33,30 @@ class Chord:
 
 class Track:
     def __init__(self):
-        self.chords = []
+        self.chords = {}
 
     def __repr__(self):
         chordstring = ""
-        for c in self.chords:
+        for c in self.chords.items():
             chordstring += f"\t{c}\n"
         return f"TRACK\n{chordstring}END TRACK"
 
     def extend_to(self, to):
         needed_chords = to - len(self.chords)
+        return # don't think this function is needed
         if to > 0:
             for _ in range(needed_chords):
                 self.chords.append(Chord())
 
     def add_note(self,x,p,note):
-        if x >= len(self.chords):
-            raise Exception(f"Track Error: chord {x} is out of range")
+        if x not in self.chords:
+            self.chords[x] = Chord()
         self.chords[x].add_note(p,note)
 
     def remove_note(self,x,p):
-        if x >= len(self.chords):
-            raise Exception(f"Track Error: chord {x} is out of range")
+        if x not in self.chords:
+            raise Exception(f"Track Error: chord {x} does not exist")
         self.chords[x].remove_note(p)
+        if not self.chords[x].notes:
+            del self.chords[x]
 

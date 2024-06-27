@@ -5,16 +5,6 @@ class TestTrack(unittest.TestCase):
     def setUp(self):
         self.t = track.Track()
 
-    def test_extend_to(self):
-        self.t = track.Track()
-        self.assertEqual(len(self.t.chords),0)
-        self.t.extend_to(5)
-        self.assertEqual(len(self.t.chords),5)
-        self.t.extend_to(3)
-        self.assertEqual(len(self.t.chords),5)
-        self.t.extend_to(10)
-        self.assertEqual(len(self.t.chords),10)
-
     def test_add_note(self):
         self.t = track.Track()
         self.t.extend_to(5)
@@ -24,11 +14,15 @@ class TestTrack(unittest.TestCase):
 
     def test_remove_note(self):
         self.t = track.Track()
-        self.t.extend_to(5)
         self.t.add_note(1,2,track.Note(3))
         self.t.remove_note(1,2)
-        for num in [2,3]:
-            self.assertNotIn(str(num), str(self.t.chords[1]))
+        self.assertNotIn(1,self.t.chords)
+
+        self.t.add_note(5,6,track.Note(7))
+        self.t.add_note(1,2,track.Note(3))
+        self.t.remove_note(1,2)
+        self.assertIn(5,self.t.chords)
+        self.assertIn(6,self.t.chords[5].notes)
 
 class TestChord(unittest.TestCase):
     def setUp(self):
