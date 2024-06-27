@@ -9,8 +9,11 @@ class Pixel:
     def __init__(self):
         self.tracks = {}
 
-    def set_drawable(self, track, d):
+    def set_drawable(self, track, d : Drawable):
         self.tracks[track] = d
+
+    def remove_drawable(self,track):
+        del self.tracks[track]
 
     def get_drawable(self, track) -> tuple[Drawable,bool]:
         if track in self.tracks:
