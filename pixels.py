@@ -23,7 +23,7 @@ class Pixel:
 
 class PixelList:
     def __init__(self):
-        self.pixels = {}
+        self.pixels : dict[tuple[int,int],Pixel] = {}
     
     def set_drawable(self, p, x, track : int, d : Drawable):
         if not (p,x) in self.pixels:
@@ -34,3 +34,8 @@ class PixelList:
         if (p,x) not in self.pixels:
             return Drawable('X'), False
         return self.pixels[(p,x)].get_drawable(track)
+
+    def remove_drawable(self, p, x, track : int):
+        if (p,x) not in self.pixels:
+            raise Exception(f"PixelList error: drawable at ({p,x}) on track {track} cannot be deleted because no pixel exists")
+        self.pixels[(p,x)].remove_drawable(track)
