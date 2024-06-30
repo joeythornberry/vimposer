@@ -28,19 +28,19 @@ class Window:
 
         # top
         for x in range(self.left, self.right):
-            yield self.top,x,"-"
+            yield self.top,x,curses.ACS_HLINE
 
         # bottom
         for x in range(self.left, self.right):
-            yield self.bottom,x,"-"
+            yield self.bottom,x,curses.ACS_HLINE
 
         # left
         for y in range(self.top, self.bottom):
-            yield y, self.left, "|"
+            yield y, self.left, curses.ACS_VLINE
 
         # right 
         for y in range(self.top, self.bottom):
-            yield y, self.right, "|"
+            yield y, self.right, curses.ACS_VLINE
 
         yield self.top,self.left,curses.ACS_ULCORNER
         yield self.top,self.right,curses.ACS_URCORNER
