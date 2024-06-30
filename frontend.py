@@ -50,22 +50,20 @@ class Frontend:
         return len(self.colors)
 
     def draw_window_border(self):
+        self.s.attron(curses.color_pair(1))
         for y,x,char in self.w.yield_border():
             self.s.move(y,x)
             self.s.addch(char)
 
-    def paint_pixel(self, p, x, d: Drawable):
+    def paint_pixel(self, p, x, d: Drawable, is_current_track : bool):
         line, char, onscreen = self.w.translate_coords(p,x)
         if onscreen:
             self.s.move(line, char)
-            self.s.addch(d.icon,curses.color_pair(d.color))
-
-    def draw_note(self, y, x, ds: list[Drawable]):
-        for index,d in enumerate(ds):
-            line, char, onscreen = self.w.translate_coords(y,x)
-            if onscreen:
-                self.s.move(line,char+index)
-                self.s.addch(d.icon)
+            if is_current_track:
+                self.s.attron(curses.color_pair(self.colors[d.color].b))
+            else:
+                self.s.attron(curses.color_pair(self.colors[d.color].f))
+            self.s.addch(d.icon)
 
     def close(self):
         curses.endwin()
