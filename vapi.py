@@ -14,21 +14,37 @@ def get_erase_chars(duration):
 class VimposerAPI:
     def __init__(self,f : Frontend,km : KeyboardManager):
         self.f = f
-        self.colors = self.f.load_colors()
+        self.num_colors = self.f.load_colors()
         self.km = km
         self.tracks : list[track.Track] = []
         self.current_track = 0
         self.pix = pixels.PixelList()
         self.length = 0
+
+    def color_is_taken(self,color : int):
+        for track in self.tracks:
+            if track.color == color:
+                return True
+        return False
+
+    def assign_new_color(self) -> int:
+        color_to_try = 0
+        while self.color_is_taken(color_to_try):
+            color_to_try += 1
+            if color_to_try >= self.num_colors:
+                return 0
+
+        return color_to_try
     
     def extend_to(self,length):
         self.length = length
 
     def add_track(self):
-        self.tracks.append(track.Track())
+        self.tracks.append(track.Track(self.assign_new_color()))
 
     def change_track(self,t : int):
         self.current_track = t
+        self.paint_entire_screen()
 
     def get_background_drawable(self,p,x):
         #notes = "c#d#efg#a#b"
@@ -43,7 +59,7 @@ class VimposerAPI:
         if d == False:
             return self.get_background_drawable(p,x)
         else:
-            d.set_color(2)
+            d.set_color(self.tracks[d.track].color)
             return d 
 
     def set_length(self, length):

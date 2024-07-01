@@ -3,17 +3,17 @@ import track
 
 class TestTrack(unittest.TestCase):
     def setUp(self):
-        self.t = track.Track()
+        self.t = track.Track(0)
 
     def test_add_note(self):
-        self.t = track.Track()
+        self.t = track.Track(0)
         self.t.extend_to(5)
         self.t.add_note(1,2,track.Note(3))
         for num in [2,3]:
             self.assertIn(str(num), str(self.t.chords[1]))
 
     def test_remove_note(self):
-        self.t = track.Track()
+        self.t = track.Track(0)
         self.t.add_note(1,2,track.Note(3))
         self.t.remove_note(1,2)
         self.assertNotIn(1,self.t.chords)

@@ -32,21 +32,15 @@ class Chord:
 
 
 class Track:
-    def __init__(self):
+    def __init__(self, color : int):
         self.chords = {}
+        self.color = color
 
     def __repr__(self):
         chordstring = ""
         for c in self.chords.items():
             chordstring += f"\t{c}\n"
         return f"TRACK\n{chordstring}END TRACK"
-
-    def extend_to(self, to):
-        needed_chords = to - len(self.chords)
-        return # don't think this function is needed
-        if to > 0:
-            for _ in range(needed_chords):
-                self.chords.append(Chord())
 
     def add_note(self,x,p,note):
         if x not in self.chords:

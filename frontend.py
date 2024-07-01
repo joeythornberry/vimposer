@@ -42,7 +42,7 @@ class Frontend:
             curses.init_pair(color_counter,color_id,background_color)
             current_color.set_foreground(color_counter)
             color_counter += 1
-            curses.init_pair(color_counter,background_color,color_id)
+            curses.init_pair(color_counter,color_id,color_id)
             current_color.set_background(color_counter)
 
             self.colors.append(current_color)
