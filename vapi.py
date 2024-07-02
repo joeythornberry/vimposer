@@ -42,8 +42,20 @@ class VimposerAPI:
     def add_track(self):
         self.tracks.append(track.Track(self.assign_new_color()))
 
-    def change_track(self,t : int):
+    def change_track_to(self,t : int):
         self.current_track = t
+        self.paint_entire_screen()
+    
+    def change_track_up(self):
+        self.current_track += 1
+        if self.current_track == len(self.tracks):
+            self.current_track = 0
+        self.paint_entire_screen()
+
+    def change_track_down(self):
+        self.current_track -= 1
+        if self.current_track == -1:
+            self.current_track = len(self.tracks) - 1
         self.paint_entire_screen()
 
     def get_background_drawable(self,p,x):
