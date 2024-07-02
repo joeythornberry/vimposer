@@ -31,7 +31,10 @@ class Frontend:
     def load_colors(self) -> int:
         self.colors : list[Color] = []
         background_color = curses.COLOR_BLACK
-        color_counter = 2 # leave room for ui colors
+        curses.init_color(20,300,300,300)
+        curses.init_pair(2,20,background_color)
+        self.weak_ui_color = 2
+        color_counter = 5 # leave room for ui colors
         for i,c in enumerate(self.rgb_codes):
 
             color_id = i + 8 # don't overwrite the default colors
@@ -59,7 +62,9 @@ class Frontend:
         line, char, onscreen = self.w.translate_coords(p,x)
         if onscreen:
             self.s.move(line, char)
-            if is_current_track:
+            if d.track == -1:
+                self.s.attron(curses.color_pair(self.weak_ui_color))
+            elif is_current_track:
                 self.s.attron(curses.color_pair(self.colors[d.color].b))
             else:
                 self.s.attron(curses.color_pair(self.colors[d.color].f))

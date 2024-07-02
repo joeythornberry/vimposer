@@ -47,10 +47,9 @@ class VimposerAPI:
         self.paint_entire_screen()
 
     def get_background_drawable(self,p,x):
-        #notes = "c#d#efg#a#b"
-        notes = "-----------"
+        notes = "c#d#efg#a#b"
         d = pixels.Drawable(notes[p % 11])
-        d.set_color(1)
+        d.set_color(-1)
         d.set_track(-1)
         return d
 
