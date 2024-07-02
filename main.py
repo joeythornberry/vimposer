@@ -20,7 +20,7 @@ km = KeyboardManager.KeyboardManager(send_keys)
 v = vapi.VimposerAPI(f,km)
 v.add_track()
 v.add_track()
-v.extend_to(60)
+v.extend_to(200)
 
 init.init(v)
 v.create_note(2,4,4)
