@@ -68,7 +68,10 @@ class Frontend:
                 self.s.attron(curses.color_pair(self.colors[d.color].b))
             else:
                 self.s.attron(curses.color_pair(self.colors[d.color].f))
-            self.s.addch(d.icon)
+            if d.cursor:
+                self.s.addch("*")
+            else:
+                self.s.addch(d.icon)
 
     def close(self):
         curses.endwin()

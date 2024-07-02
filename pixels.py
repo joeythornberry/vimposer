@@ -1,6 +1,10 @@
 class Drawable:
     def __init__(self, icon):
         self.icon = icon
+        self.cursor = False
+
+    def set_cursor(self,c : bool):
+        self.cursor = c
 
     def set_color(self,c : int):
         self.color = c

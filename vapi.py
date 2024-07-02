@@ -20,6 +20,7 @@ class VimposerAPI:
         self.current_track = 0
         self.pix = pixels.PixelList()
         self.length = 0
+        self.cursor = None
 
 #    def resize_window(self):
 #        self.f.w.set_dimensions(0,curses.LINES-2,0,curses.COLS-1)
@@ -90,6 +91,7 @@ class VimposerAPI:
         self.tracks[self.current_track].add_note(p,x,d)
         for i,icon in enumerate(get_note_chars(d)):
             draw = pixels.Drawable(icon)
+            draw.set_cursor(True)
             self.pix.set_drawable(p,x+i,self.current_track,draw)
             draw.set_color(2)
             self.f.paint_pixel(p,x+i,draw,True)
@@ -98,3 +100,12 @@ class VimposerAPI:
         #self.f.draw_note(p,x,get_erase_chars(d))
         #self.f.draw_note(np,nx,get_note_chars(d))
         pass
+
+    def change_cursor(self, p, x, refresh=True):
+        pass
+        if self.cursor != None:
+            pass
+        l = self.tracks[self.current_track].chords[p].notes[x].d
+        print(l)
+
+
