@@ -21,6 +21,9 @@ class VimposerAPI:
         self.pix = pixels.PixelList()
         self.length = 0
 
+#    def resize_window(self):
+#        self.f.w.set_dimensions(0,curses.LINES-2,0,curses.COLS-1)
+
     def color_is_taken(self,color : int):
         for track in self.tracks:
             if track.color == color:

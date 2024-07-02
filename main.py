@@ -10,8 +10,7 @@ stdscr = curses.initscr()
 curses.noecho()
 
 w = window.Window()
-w.set_dimensions(0,20,0,60)
-
+w.set_dimensions(0,curses.LINES-2,0,curses.COLS-1)
 f = frontend.Frontend(w)
 
 def send_keys(keys):
