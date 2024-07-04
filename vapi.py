@@ -122,11 +122,6 @@ class VimposerAPI:
         if change_cursor:
             self.change_cursor(p,x)
 
-    def move_note(self,p,x,np,nx,d):
-        #self.f.draw_note(p,x,get_erase_chars(d))
-        #self.f.draw_note(np,nx,get_note_chars(d))
-        pass
-
     def get_note_duration(self,p,x):
         return self.tracks[self.current_track].chords[x].notes[p].d
 
@@ -226,17 +221,13 @@ class VimposerAPI:
         t = self.tracks[self.current_track]
         k = list(t.chords.keys())
         k.sort()
-        self.log(str(k))
         i = k.index(self.cur.x)
-        self.log(f"i = {i}")
 
         can_move = (move_left and i > 0) or (not move_left and i < len(k) - 1)
         if can_move:
-            self.log("moving")
             if move_left:
                 new_x = k[i-1]
             else:
                 new_x = k[i+1]
             new_p = self.calculate_closest_pitch(self.cur.p,new_x)
             self.change_cursor(new_p,new_x)
-            self.log(f"new coords: {new_p},{new_x}")
