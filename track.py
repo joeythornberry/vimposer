@@ -40,9 +40,9 @@ class Track:
         chordstring = ""
         for c in self.chords.items():
             chordstring += f"\t{c}\n"
-        return f"TRACK\n{chordstring}END TRACK"
+        return f"TRACK\n{chordstring}END TRACK\n"
 
-    def add_note(self,x,p,note):
+    def add_note(self,p,x,note):
         if x not in self.chords:
             self.chords[x] = Chord()
         self.chords[x].add_note(p,note)
