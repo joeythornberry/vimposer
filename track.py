@@ -7,7 +7,7 @@ class Note:
 
 class Chord:
     def __init__(self):
-        self.notes = {}
+        self.notes : dict[int,Note] = {}
 
     def __repr__(self):
         notestring = ""
