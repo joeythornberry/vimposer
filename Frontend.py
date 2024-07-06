@@ -1,5 +1,4 @@
-import window
-from pixels import Drawable
+from Drawable import Drawable
 import curses
 
 class Color:
@@ -10,9 +9,8 @@ class Color:
         self.b = background
 
 class Frontend:
-    def __init__(self,window):
+    def __init__(self):
         self.s = curses.initscr()
-        self.w = window
         if not curses.has_colors():
             curses.endwin()
             curses.echo()
@@ -52,26 +50,23 @@ class Frontend:
 
         return len(self.colors)
 
-    def draw_window_border(self):
-        self.s.attron(curses.color_pair(1))
-        for y,x,char in self.w.yield_border():
-            self.s.move(y,x)
-            self.s.addch(char)
+    def paint_pixel(self, d: Drawable):
+        self.s.move(d.y,d.x)
 
-    def paint_pixel(self, p, x, d: Drawable, is_current_track : bool):
-        line, char, onscreen = self.w.translate_coords(p,x)
-        if onscreen:
-            self.s.move(line, char)
-            if d.track == -1:
+        match d.type:
+            case "background":
                 self.s.attron(curses.color_pair(self.weak_ui_color))
-            elif is_current_track:
+            case "focused_track":
                 self.s.attron(curses.color_pair(self.colors[d.color].b))
-            else:
+            case "unfocused_track":
                 self.s.attron(curses.color_pair(self.colors[d.color].f))
-            if d.cursor:
-                self.s.addch("*")
-            else:
-                self.s.addch(d.icon)
+            case _:
+                raise Exception("PAINT ERROR: drawable has no type")
+
+        if d.cursor:
+            self.s.addch("#")
+        else:
+            self.s.addch(d.icon)
 
     def close(self):
         curses.endwin()

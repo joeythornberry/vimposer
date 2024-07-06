@@ -27,19 +27,19 @@ class Window:
     def yield_border(self):
 
         # top
-        for x in range(self.left, self.right):
+        for x in range(self.left+1, self.right):
             yield self.top,x,curses.ACS_HLINE
 
         # bottom
-        for x in range(self.left, self.right):
+        for x in range(self.left+1, self.right):
             yield self.bottom,x,curses.ACS_HLINE
 
         # left
-        for y in range(self.top, self.bottom):
+        for y in range(self.top+1, self.bottom):
             yield y, self.left, curses.ACS_VLINE
 
         # right 
-        for y in range(self.top, self.bottom):
+        for y in range(self.top+1, self.bottom):
             yield y, self.right, curses.ACS_VLINE
 
         yield self.top,self.left,curses.ACS_ULCORNER
