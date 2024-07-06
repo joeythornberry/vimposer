@@ -16,6 +16,8 @@ class Screen:
         self.f = f
         self.p = p
         self.get_track_color = get_track_color
+        self.refresh_full_screen(0)
+        self.draw_window_border()
 
     def get_locations(self,n : NoteData) -> list[Location]:
         return [Location(n.p,n.x+i) for i in range(n.l)]
@@ -29,7 +31,8 @@ class Screen:
         d = Drawable(pd)
         d.set_type(type)
 
-        d.set_color(self.get_track_color(pd.track))
+        if type != "background":
+            d.set_color(self.get_track_color(pd.track))
 
         d.set_y(y)
         d.set_x(x)
@@ -40,6 +43,15 @@ class Screen:
         locs = self.get_locations(n)
         for l in locs:
             self.refresh_location(l,current_track)
+
+    def refresh_full_screen(self, current_track : int):
+        for p,x in self.w.locate_full_screen():
+            l = Location(p,x)
+            self.refresh_location(l, current_track)
+
+    def draw_window_border(self):
+        for y,x,icon in self.w.yield_border():
+            self.f.paint_ui_element(y,x,icon)
 
     def set_location(self, l : Location, pd : PixelData):
         self.p.set_data(l.p,l.x,pd.track,pd)

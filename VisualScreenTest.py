@@ -61,5 +61,7 @@ s.set_note(n,1)
 s.set_note(n,2)
 s.refresh_note(n,2)
 
+s.refresh_full_screen(1)
+
 s.f.s.getch()
 f.close()

@@ -18,11 +18,21 @@ class Window:
     def shift_down(self,amount):
         self.down += amount
 
-    def translate_coords(self,y,x):
-        line = self.top + self.down + self.height - y
+    def translate_coords(self,p,x):
+        line = self.top + self.down + self.height - p
         char = x + self.left + self.across
         onscreen = not (line < self.top + 1 or line > self.bottom - 1 or char < self.left + 1 or char > self.right - 1)
         return line,char,onscreen
+
+    def translate_coords_reverse(self,line,char):
+        p = self.top + self.down + self.height - line
+        x = char - self.left - self.across
+        return p,x
+
+    def locate_full_screen(self):
+        for y in range(self.top,self.bottom):
+            for x in range(self.left,self.right):
+                yield self.translate_coords_reverse(y,x)
 
     def yield_border(self):
 

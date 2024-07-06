@@ -11,6 +11,7 @@ class Color:
 class Frontend:
     def __init__(self):
         self.s = curses.initscr()
+        curses.curs_set(0)
         if not curses.has_colors():
             curses.endwin()
             curses.echo()
@@ -25,6 +26,10 @@ class Frontend:
             (0,1000,0),
             (0,0,1000),
             ]
+
+    def paint_ui_element(self,y,x,icon):
+        self.s.move(y,x)
+        self.s.addch(icon)
 
     def load_colors(self) -> int:
         self.colors : list[Color] = []
