@@ -1,4 +1,5 @@
 from Chord import Chord
+from Note import Note
 
 class Track:
     color : int
@@ -12,14 +13,14 @@ class Track:
         chordstring = ""
         for c in self.chords.items():
             chordstring += f"\t{c}\n"
-        return f"TRACK\n{chordstring}END TRACK\n"
+        return f"\n\tTRACK (color: {self.color})\n\t{chordstring}\tEND TRACK\n"
 
-    def add_note(self,p,x,note):
+    def add_note(self,p,x,l):
         if x not in self.chords:
             self.chords[x] = Chord()
-        self.chords[x].add_note(p,note)
+        self.chords[x].add_note(p,Note(l))
 
-    def remove_note(self,x,p):
+    def delete_note(self,p,x):
         if x not in self.chords:
             raise Exception(f"Track Error: chord {x} does not exist")
         self.chords[x].remove_note(p)

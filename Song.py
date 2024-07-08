@@ -2,12 +2,12 @@ from Frontend import Frontend
 from NoteData import NoteData
 from PixelList import PixelList
 from Screen import Screen
-from Track import Track
+from TrackList import TrackList
 from Window import Window
 
 class Song:
     s : Screen
-    tracks : dict[int,Track]
+    trax : TrackList
     t : int
     new_track_id : int
 
@@ -17,29 +17,21 @@ class Song:
         w = Window()
         w.set_dimensions(1,30,1,30)
         p = PixelList()
-        self.s = Screen(w,f,p,self.get_track_color)
-        self.tracks = {}
-        self.t = 0
-        self.new_track_id = -1
+        self.trax = TrackList()
+        self.s = Screen(w,f,p,self.trax.tcm.get_track_color)
         
-    def assign_track_color(self) -> int:
-        if not self.tracks:
-            return 0
-        taken_colors = [track.color for track in self.tracks.values()]
-        color = 0
-        while color in taken_colors:
-            color += 1
-        return color
-            
-    def create_track(self):
-        self.new_track_id += 1
-        self.tracks[self.new_track_id] = Track(self.assign_track_color())
-        return self.new_track_id
-
-    def get_track_color(self, t : int):
-        return self.tracks[t].color
-
     def new_note(self,p,x,l,note_track : int, c):
         n = NoteData(p,x,l)
+        self.trax.add_note(p,x,l,note_track)
         self.s.set_note(n,note_track,c)
-        self.s.refresh_note(n,self.t)
+        self.s.refresh_note(n,self.trax.current())
+
+    def delete_note(self,p,x,l,note_track : int):
+        n = NoteData(p,x,l)
+        self.trax.delete_note(p,x,note_track)
+        self.s.remove_note(n,note_track)
+        self.s.refresh_note(n,self.trax.current())
+
+    def move_note(self,p,x,l,np,nx,nl,note_track : int,c):
+        self.delete_note(p,x,l,note_track)
+        self.new_note(np,nx,nl,note_track,c)
