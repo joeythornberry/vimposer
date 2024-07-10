@@ -12,6 +12,7 @@ class Frontend:
     def __init__(self):
         self.s = curses.initscr()
         curses.curs_set(0)
+        curses.noecho()
         if not curses.has_colors():
             curses.endwin()
             curses.echo()

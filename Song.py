@@ -4,21 +4,40 @@ from PixelList import PixelList
 from Screen import Screen
 from TrackList import TrackList
 from Window import Window
+from Cursor import Cursor
+import curses
 
 class Song:
     s : Screen
     trax : TrackList
     t : int
     new_track_id : int
+    cur : Cursor
 
     def __init__(self):
         f = Frontend()
         self.colors = f.load_colors()
         w = Window()
-        w.set_dimensions(1,30,1,30)
+        w.set_dimensions(0,curses.LINES-1,0,curses.COLS-2)
         p = PixelList()
         self.trax = TrackList()
         self.s = Screen(w,f,p,self.trax.tcm.get_track_color)
+        self.trax.create_track()
+        self.s.w.shift_down(40)
+        self.new_note(60,1,4,0,True)
+        self.cur = Cursor(60,1)
+
+    def curL(self):
+        return self.trax.get_length(self.cur.p, self.cur.x, self.trax.t)
+
+    def curP(self):
+        return self.cur.p
+
+    def curX(self):
+        return self.cur.x
+
+    def curT(self):
+        return self.trax.current()
         
     def new_note(self,p,x,l,note_track : int, c):
         n = NoteData(p,x,l)
@@ -35,3 +54,48 @@ class Song:
     def move_note(self,p,x,l,np,nx,nl,note_track : int,c):
         self.delete_note(p,x,l,note_track)
         self.new_note(np,nx,nl,note_track,c)
+
+    def set_note_cursor(self,p,x,l,track : int, c : bool):
+        n = NoteData(p,x,l)
+        self.s.set_note(n,track,c)
+
+    def move_cursor(self,p,x,old_track : int, new_track : int):
+        l = self.trax.get_length(self.curP(),self.curX(),old_track)
+        self.set_note_cursor(self.curP(),self.curX(),l,old_track,False)
+        n = NoteData(self.curP(),self.curX(),l)
+        self.s.refresh_note(n,new_track)
+        self.cur.set(p,x)
+        new_l = self.trax.get_length(self.curP(),self.curX(),new_track)
+        self.set_note_cursor(self.curP(),self.curX(),new_l,new_track,True)
+        n = NoteData(self.curP(),self.curX(),l)
+        self.s.refresh_note(n,new_track)
+
+
+    def change_track(self,calculate_track):
+        old_track = self.curT()
+        self.trax.change_track_to(calculate_track)
+        p,x = self.trax.generate_new_cursor(self.cur.p,self.cur.x)
+        self.move_cursor(p,x,old_track,self.curT())
+        self.s.refresh_full_screen(self.curT())
+
+    def change_track_up(self):
+        self.change_track(self.trax.get_up_track())
+
+    def change_track_down(self):
+        self.change_track(self.trax.get_down_track())
+
+    def move_cursor_down(self):
+        p,x = self.trax.find_cursor_down_target(self.curP(), self.curX())
+        self.move_cursor(p,x,self.curT(),self.curT())
+
+    def move_cursor_up(self):
+        p,x = self.trax.find_cursor_up_target(self.curP(), self.curX())
+        self.move_cursor(p,x,self.curT(),self.curT())
+
+    def move_cursor_left(self):
+        p,x = self.trax.find_cursor_left_target(self.curP(), self.curX())
+        self.move_cursor(p,x,self.curT(),self.curT())
+
+    def move_cursor_right(self):
+        p,x = self.trax.find_cursor_right_target(self.curP(), self.curX())
+        self.move_cursor(p,x,self.curT(),self.curT())
