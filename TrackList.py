@@ -1,4 +1,5 @@
 from Track import Track
+from Note import Note
 from TrackColorManager import TrackColorManager
 class TrackList:
     tracks : dict[int,Track]
@@ -141,3 +142,31 @@ class TrackList:
 
     def find_cursor_right_target(self,p,x):
         return self.find_cursor_horizontal_target(p,x,False)
+
+    def find_note_up_location(self,p,x):
+        return p + 1,x
+
+    def find_note_down_location(self,p,x):
+        return p - 1,x
+
+    def find_note_left_location(self,p,x):
+        return p,x - 1
+
+    def find_note_right_location(self,p,x):
+        return p,x + 1
+
+    def does_note_fit(self,p,x,l,cur_x,track : int) -> bool:
+        tr = self.tracks[track]
+        for chord_x,c in tr.chords.items():
+            if chord_x == cur_x:
+                if cur_x != x:
+                    continue # don't want the note itself to block itself from moving
+            if chord_x <= x:
+                if c.pitch_occupied(p):
+                    if chord_x + c.notes[p].l > x:
+                        return False
+            if chord_x > x and chord_x < x + l:
+                if c.pitch_occupied(p):
+                    return False
+
+        return True

@@ -35,3 +35,15 @@ class VimposerAPI:
 
     def move_cursor_right(self):
         self.s.move_cursor_right()
+
+    def move_note_up(self):
+        self.s.move_note_up()
+
+    def move_note_down(self):
+        self.s.move_note_down()
+
+    def move_note_left(self):
+        self.s.move_note_left()
+
+    def move_note_right(self):
+        self.s.move_note_right()

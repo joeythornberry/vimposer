@@ -51,23 +51,44 @@ class Song:
         self.s.remove_note(n,note_track)
         self.s.refresh_note(n,self.trax.current())
 
-    def move_note(self,p,x,l,np,nx,nl,note_track : int,c):
+    def move_note(self,p,x,l,np,nx,nl,note_track : int,move_cursor : bool):
         self.delete_note(p,x,l,note_track)
-        self.new_note(np,nx,nl,note_track,c)
+        self.new_note(np,nx,nl,note_track,False)
+        if move_cursor:
+            self.move_cursor(np,nx,note_track,note_track,old_note_exists=False)
+
+    def move_note_in_direction(self,get_location):
+        p,x = get_location(self.curP(),self.curX())
+        l = self.trax.get_length(self.curP(),self.curX(),self.curT())
+        if self.trax.does_note_fit(p,x,l,self.curX(),self.curT()):
+            self.move_note(self.curP(),self.curX(),l,p,x,l,self.curT(),move_cursor=True)
+
+    def move_note_up(self):
+        self.move_note_in_direction(self.trax.find_note_up_location)
+            
+    def move_note_down(self):
+        self.move_note_in_direction(self.trax.find_note_down_location)
+
+    def move_note_left(self):
+        self.move_note_in_direction(self.trax.find_note_left_location)
+
+    def move_note_right(self):
+        self.move_note_in_direction(self.trax.find_note_right_location)
 
     def set_note_cursor(self,p,x,l,track : int, c : bool):
         n = NoteData(p,x,l)
         self.s.set_note(n,track,c)
 
-    def move_cursor(self,p,x,old_track : int, new_track : int):
-        l = self.trax.get_length(self.curP(),self.curX(),old_track)
-        self.set_note_cursor(self.curP(),self.curX(),l,old_track,False)
-        n = NoteData(self.curP(),self.curX(),l)
-        self.s.refresh_note(n,new_track)
+    def move_cursor(self,p,x,old_track : int, new_track : int, old_note_exists : bool = True):
+        if old_note_exists:
+            l = self.trax.get_length(self.curP(),self.curX(),old_track)
+            self.set_note_cursor(self.curP(),self.curX(),l,old_track,False)
+            n = NoteData(self.curP(),self.curX(),l)
+            self.s.refresh_note(n,new_track)
         self.cur.set(p,x)
         new_l = self.trax.get_length(self.curP(),self.curX(),new_track)
         self.set_note_cursor(self.curP(),self.curX(),new_l,new_track,True)
-        n = NoteData(self.curP(),self.curX(),l)
+        n = NoteData(self.curP(),self.curX(),new_l)
         self.s.refresh_note(n,new_track)
 
 
