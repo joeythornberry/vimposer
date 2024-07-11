@@ -167,5 +167,7 @@ class TrackList:
                         return False
                 if chord_x > x and chord_x < x + l:
                     return False
+        if x < 0:
+            return False
 
         return True

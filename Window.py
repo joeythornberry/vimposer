@@ -20,7 +20,7 @@ class Window:
 
     def translate_coords(self,p,x):
         line = self.top + self.down + self.height - p
-        char = x + self.left + self.across
+        char = x + self.left + self.across + 1
         onscreen = not (line < self.top + 1 or line > self.bottom - 1 or char < self.left + 1 or char > self.right - 1)
         return line,char,onscreen
 
