@@ -2,7 +2,7 @@ import curses
 class Window:
     def __init__(self):
         self.across = 0
-        self.down = 0
+        self.up = 0
 
     def set_dimensions(self,top,bottom,left,right):
         self.top = top
@@ -12,21 +12,24 @@ class Window:
         self.height = self.bottom - self.top
 
     def shift_across(self,amount):
+        if self.across == 0 and amount < 0:
+            return
         self.across += amount
 
-
-    def shift_down(self,amount):
-        self.down += amount
+    def shift_up(self,amount):
+        if (self.up == 0 and amount < 0) or (self.up == (129-self.height) and amount > 0):
+            return
+        self.up += amount
 
     def translate_coords(self,p,x):
-        line = self.top + self.down + self.height - p
-        char = x + self.left + self.across + 1
+        line = self.top + self.up + self.height - p - 1
+        char = x + self.left - self.across + 1
         onscreen = not (line < self.top + 1 or line > self.bottom - 1 or char < self.left + 1 or char > self.right - 1)
         return line,char,onscreen
 
     def translate_coords_reverse(self,line,char):
-        p = self.top + self.down + self.height - line
-        x = char - self.left - self.across
+        p = self.top + self.up + self.height - line - 1
+        x = char - self.left + self.across - 1
         return p,x
 
     def locate_full_screen(self):

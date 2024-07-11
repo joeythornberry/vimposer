@@ -76,3 +76,11 @@ class Screen:
     def remove_note(self,n : NoteData, t : int):
         for l in self.get_locations(n):
             self.remove_location(l,t)
+
+    def shift_up(self,amount : int,t):
+        self.w.shift_up(amount)
+        self.refresh_full_screen(t)
+
+    def shift_across(self,amount : int,t):
+        self.w.shift_across(amount)
+        self.refresh_full_screen(t)

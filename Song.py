@@ -19,7 +19,7 @@ class Song:
         self.colors = f.load_colors()
         w = Window()
         w.set_dimensions(0,curses.LINES-1,0,curses.COLS-2)
-        w.shift_down(40)
+        w.shift_up(40)
         p = PixelList()
         self.trax = TrackList()
         self.s = Screen(w,f,p,self.trax.tcm.get_track_color)
@@ -119,3 +119,9 @@ class Song:
     def move_cursor_right(self):
         p,x = self.trax.find_cursor_right_target(self.curP(), self.curX())
         self.move_cursor(p,x,self.curT(),self.curT())
+
+    def shift_up(self,amount):
+        self.s.shift_up(amount, self.curT())
+
+    def shift_across(self,amount):
+        self.s.shift_across(amount, self.curT())

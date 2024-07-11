@@ -57,3 +57,8 @@ class VimposerAPI:
     def move_note_up(self):
         self.s.move_note_in_direction(self.s.curP() + 1,self.s.curX())
 
+    def shift_window_vertical(self,amount : int):
+        self.s.shift_up(amount)
+
+    def shift_window_horizontal(self,amount : int):
+        self.s.shift_across(amount)
