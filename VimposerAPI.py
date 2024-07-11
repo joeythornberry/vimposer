@@ -62,3 +62,6 @@ class VimposerAPI:
 
     def shift_window_horizontal(self,amount : int):
         self.s.shift_across(amount)
+
+    def create_track(self):
+        self.s.create_track()

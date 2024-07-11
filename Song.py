@@ -23,13 +23,8 @@ class Song:
         p = PixelList()
         self.trax = TrackList()
         self.s = Screen(w,f,p,self.trax.tcm.get_track_color)
-        self.trax.create_track()
-
-        n = NoteData(60,1,4)
-        self.trax.add_note(60,1,4,0)
-        self.s.set_note(n,0)
         self.cur = Cursor(-1,-1)
-        self.move_cursor(60,1,0,0,old_note_exists=False)
+        self.create_track()
 
     def curL(self):
         return self.trax.get_length(self.cur.p, self.cur.x, self.trax.t)
@@ -91,11 +86,11 @@ class Song:
         self.s.refresh_note(n,new_track)
 
 
-    def change_track(self,calculate_track):
+    def change_track(self,calculate_track,old_note_exists = True):
         old_track = self.curT()
         self.trax.change_track_to(calculate_track)
         p,x = self.trax.generate_new_cursor(self.cur.p,self.cur.x)
-        self.move_cursor(p,x,old_track,self.curT())
+        self.move_cursor(p,x,old_track,self.curT(),old_note_exists)
         self.s.refresh_full_screen(self.curT())
 
     def change_track_up(self):
@@ -125,3 +120,10 @@ class Song:
 
     def shift_across(self,amount):
         self.s.shift_across(amount, self.curT())
+
+    def create_track(self):
+        t = self.trax.create_track()
+        self.trax.add_note(60,0,4,t)
+        p,x = self.trax.generate_new_cursor(0,0,self.curT())
+        self.cur.set(p,x)
+        self.change_track(t)

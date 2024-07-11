@@ -55,7 +55,7 @@ class KeyboardManager:
                 raise TypeError(message)
             if (pattern in keypresses):
                 message = "ERROR: Map unreachable: " + pattern + " is already mapped, so " + keypresses + " will never be reached"
-                raise TypeError(message) 
+                #raise TypeError(message) 
 
         self.maps[keypresses] = function
 

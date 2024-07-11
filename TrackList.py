@@ -78,7 +78,9 @@ class TrackList:
 
         return k[closest] 
         
-    def generate_new_cursor(self,old_p,old_x):
+    def generate_new_cursor(self,old_p,old_x,track = -1):
+        if track == -1:
+            track = self.t
         if len(list(self.tracks[self.t].chords.keys())) == 0:
             raise Exception("TRACKLIST ERROR: cannot generate cursor for track {self.t} because it has no notes")
         new_x = self.calculate_closest_chord(old_x)
