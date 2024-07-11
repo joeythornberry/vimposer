@@ -34,6 +34,7 @@ class KeyboardManager:
                 for i in range(times):
                     self.maps[self.keys]()
                 self.keys = ""
+                self.prefix = ""
 
             except KeyError:
                 pass

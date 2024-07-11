@@ -24,8 +24,12 @@ class Song:
         self.s = Screen(w,f,p,self.trax.tcm.get_track_color)
         self.trax.create_track()
         self.s.w.shift_down(40)
-        self.new_note(60,1,4,0,True)
-        self.cur = Cursor(60,1)
+
+        n = NoteData(60,1,4)
+        self.trax.add_note(60,1,4,0)
+        self.s.set_note(n,0)
+        self.cur = Cursor(-1,-1)
+        self.move_cursor(60,1,0,0,old_note_exists=False)
 
     def curL(self):
         return self.trax.get_length(self.cur.p, self.cur.x, self.trax.t)
@@ -39,11 +43,19 @@ class Song:
     def curT(self):
         return self.trax.current()
         
-    def new_note(self,p,x,l,note_track : int, c):
+    def new_note_from_cursor(self,p,x):
+        successful = self.new_note(p,x,self.curL(),self.curT(),False)
+        if successful:
+            self.move_cursor(p,x,self.curT(),self.curT())
+
+    def new_note(self,p,x,l,note_track : int, c) -> bool:
+        if not self.trax.does_note_fit(p,x,l,self.curX(),note_track):
+            return False
         n = NoteData(p,x,l)
         self.trax.add_note(p,x,l,note_track)
         self.s.set_note(n,note_track,c)
         self.s.refresh_note(n,self.trax.current())
+        return True
 
     def delete_note(self,p,x,l,note_track : int):
         n = NoteData(p,x,l)
@@ -57,23 +69,10 @@ class Song:
         if move_cursor:
             self.move_cursor(np,nx,note_track,note_track,old_note_exists=False)
 
-    def move_note_in_direction(self,get_location):
-        p,x = get_location(self.curP(),self.curX())
+    def move_note_in_direction(self,p,x):
         l = self.trax.get_length(self.curP(),self.curX(),self.curT())
         if self.trax.does_note_fit(p,x,l,self.curX(),self.curT()):
             self.move_note(self.curP(),self.curX(),l,p,x,l,self.curT(),move_cursor=True)
-
-    def move_note_up(self):
-        self.move_note_in_direction(self.trax.find_note_up_location)
-            
-    def move_note_down(self):
-        self.move_note_in_direction(self.trax.find_note_down_location)
-
-    def move_note_left(self):
-        self.move_note_in_direction(self.trax.find_note_left_location)
-
-    def move_note_right(self):
-        self.move_note_in_direction(self.trax.find_note_right_location)
 
     def set_note_cursor(self,p,x,l,track : int, c : bool):
         n = NoteData(p,x,l)

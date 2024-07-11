@@ -15,8 +15,17 @@ class VimposerAPI:
     def sound(self):
         print("we are here")
 
-    def make_note(self):
-        self.s.new_note(self.s.curP(),self.s.curX()+self.s.curL(),self.s.curL(),self.s.curT(),True)
+    def make_note_right(self):
+        self.s.new_note_from_cursor(self.s.curP(),self.s.curX() + self.s.curL())
+
+    def make_note_left(self):
+        self.s.new_note_from_cursor(self.s.curP(),self.s.curX() - self.s.curL())
+
+    def make_note_up(self):
+        self.s.new_note_from_cursor(self.s.curP() + 1,self.s.curX())
+
+    def make_note_down(self):
+        self.s.new_note_from_cursor(self.s.curP() - 1,self.s.curX())
 
     def change_track_up(self):
         self.s.change_track_up()
@@ -36,14 +45,15 @@ class VimposerAPI:
     def move_cursor_right(self):
         self.s.move_cursor_right()
 
-    def move_note_up(self):
-        self.s.move_note_up()
+    def move_note_right(self):
+        self.s.move_note_in_direction(self.s.curP(),self.s.curX() + 1)
+            
+    def move_note_left(self):
+        self.s.move_note_in_direction(self.s.curP(),self.s.curX() - 1)
 
     def move_note_down(self):
-        self.s.move_note_down()
+        self.s.move_note_in_direction(self.s.curP() - 1,self.s.curX())
 
-    def move_note_left(self):
-        self.s.move_note_left()
+    def move_note_up(self):
+        self.s.move_note_in_direction(self.s.curP() + 1,self.s.curX())
 
-    def move_note_right(self):
-        self.s.move_note_right()

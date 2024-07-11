@@ -158,15 +158,14 @@ class TrackList:
     def does_note_fit(self,p,x,l,cur_x,track : int) -> bool:
         tr = self.tracks[track]
         for chord_x,c in tr.chords.items():
-            if chord_x == cur_x:
-                if cur_x != x:
-                    continue # don't want the note itself to block itself from moving
-            if chord_x <= x:
-                if c.pitch_occupied(p):
+            if c.pitch_occupied(p):
+                if chord_x == cur_x:
+                    if cur_x != x:
+                        continue # don't want the note itself to block itself from moving
+                if chord_x <= x:
                     if chord_x + c.notes[p].l > x:
                         return False
-            if chord_x > x and chord_x < x + l:
-                if c.pitch_occupied(p):
+                if chord_x > x and chord_x < x + l:
                     return False
 
         return True
