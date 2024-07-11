@@ -1,5 +1,6 @@
 from Pixel import Pixel
 from PixelData import PixelData
+from calculate_background_icon import calculate_background_icon
 
 class PixelList:
     def __init__(self):
@@ -13,7 +14,7 @@ class PixelList:
     def get_data(self, p, x, current_track : int) -> tuple[PixelData,str]:
         if (p,x) not in self.pixels:
             pd = PixelData()
-            pd.set_icon("b")
+            pd.set_icon(calculate_background_icon(p,x))
             pd.set_track(-1)
             return pd, "background"
         pd, focused = self.pixels[(p,x)].get_data(current_track)

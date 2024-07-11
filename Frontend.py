@@ -59,9 +59,28 @@ class Frontend:
     def paint_pixel(self, d: Drawable):
         self.s.move(d.y,d.x)
 
+        icon = "X"
+        match d.icon:
+            case "note_start":
+                if d.cursor:
+                    icon = curses.ACS_BULLET
+                else:
+                    icon = "["
+            case "note_middle":
+                if d.cursor:
+                    icon = curses.ACS_BULLET
+                else:
+                    icon = " "
+            case "note_end":
+                if d.cursor:
+                    icon = curses.ACS_BULLET
+                else:
+                    icon = "]"
+
         match d.type:
             case "background":
                 self.s.attron(curses.color_pair(self.weak_ui_color))
+                icon = d.icon
             case "focused_track":
                 self.s.attron(curses.color_pair(self.colors[d.color].b))
             case "unfocused_track":
@@ -69,10 +88,7 @@ class Frontend:
             case _:
                 raise Exception("PAINT ERROR: drawable has no type")
 
-        if d.cursor:
-            self.s.addch("#")
-        else:
-            self.s.addch(d.icon)
+        self.s.addch(icon)
 
     def close(self):
         curses.endwin()

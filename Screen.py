@@ -63,14 +63,14 @@ class Screen:
         if n.l == 0:
             raise Exception(f"SCREEN ERROR: cannot set note of length {n.l} at position ({n.p},{n.x})")
         locs = self.get_locations(n)
-        start = PixelData("[",t,c)
+        start = PixelData("note_start",t,c)
         self.set_location(locs[0],start)
 
         for i in range(1,len(locs)-1):
-            middle = PixelData("_",t,c)
+            middle = PixelData("note_middle",t,c)
             self.set_location(locs[i],middle)
 
-        end = PixelData("]",t,c)
+        end = PixelData("note_end",t,c)
         self.set_location(locs[-1],end)
 
     def remove_note(self,n : NoteData, t : int):

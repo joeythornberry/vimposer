@@ -19,11 +19,11 @@ class Song:
         self.colors = f.load_colors()
         w = Window()
         w.set_dimensions(0,curses.LINES-1,0,curses.COLS-2)
+        w.shift_down(40)
         p = PixelList()
         self.trax = TrackList()
         self.s = Screen(w,f,p,self.trax.tcm.get_track_color)
         self.trax.create_track()
-        self.s.w.shift_down(40)
 
         n = NoteData(60,1,4)
         self.trax.add_note(60,1,4,0)
