@@ -21,12 +21,23 @@ class Frontend:
         curses.start_color()
         curses.init_pair(1,curses.COLOR_WHITE,curses.COLOR_BLACK)
         curses.init_pair(2,curses.COLOR_BLACK,curses.COLOR_BLUE)
+        # thanks to ChatGPT for the color choices lolol
         self.rgb_codes = [
-            (1000,1000,1000),
-            (1000,0,0),
-            (0,1000,0),
-            (0,0,1000),
-            ]
+                (1000, 0, 0),     # Red
+                (0, 1000, 0),     # Green
+                (0, 0, 1000),     # Blue
+                (1000, 1000, 0),  # Yellow
+                (1000, 0, 1000),  # Magenta
+                (0, 1000, 1000),  # Cyan
+                (1000, 500, 0),   # Orange
+                (500, 1000, 0),   # Lime
+                (0, 1000, 500),   # Aqua
+                (1000, 0, 500),   # Fuchsia
+                (500, 0, 1000),   # Purple
+                (500, 500, 1000), # Periwinkle
+                (1000, 500, 500), # Salmon
+                (500, 1000, 500)  # Spring Green
+                ]
 
     def paint_ui_element(self,y,x,icon):
         self.s.move(y,x)
@@ -35,8 +46,8 @@ class Frontend:
     def load_colors(self) -> int:
         self.colors : list[Color] = []
         background_color = curses.COLOR_BLACK
-        curses.init_color(20,300,300,300)
-        curses.init_pair(2,20,background_color)
+        curses.init_color(2,300,300,300)
+        curses.init_pair(2,2,background_color)
         self.weak_ui_color = 2
         color_counter = 5 # leave room for ui colors
         for i,c in enumerate(self.rgb_codes):
