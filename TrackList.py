@@ -19,6 +19,9 @@ class TrackList:
     def current(self) -> int:
         return self.t
 
+    def track_has_more_than_one_note(self,track : int) -> bool:
+        return self.tracks[track].has_more_than_one_note()
+
     def change_track_to(self,new_t : int):
         if new_t in self.tracks:
             self.t = new_t

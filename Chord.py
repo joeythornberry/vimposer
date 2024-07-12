@@ -25,3 +25,6 @@ class Chord:
         del self.notes[pitch]
         return note
 
+    def has_more_than_one_note(self):
+        return len(self.notes.keys()) > 1
+

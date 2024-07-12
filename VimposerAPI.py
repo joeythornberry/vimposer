@@ -27,6 +27,9 @@ class VimposerAPI:
     def make_note_down(self):
         self.s.new_note_from_cursor(self.s.curP() - 1,self.s.curX())
 
+    def delete_cursor_note(self):
+        self.s.delete_cursor_note()
+
     def change_track_up(self):
         self.s.change_track_up()
 

@@ -85,6 +85,12 @@ class Song:
         n = NoteData(self.curP(),self.curX(),new_l)
         self.s.refresh_note(n,new_track)
 
+    def delete_cursor_note(self):
+        if not self.trax.track_has_more_than_one_note(self.curT()):
+            return
+        self.delete_note(self.curP(),self.curX(),self.trax.get_length(self.curP(),self.curX(),self.curT()),self.curT())
+        p,x = self.trax.generate_new_cursor(self.curP(),self.curX())
+        self.move_cursor(p,x,self.curT(),self.curT(),old_note_exists=False)
 
     def change_track(self,calculate_track,old_note_exists = True):
         old_track = self.curT()

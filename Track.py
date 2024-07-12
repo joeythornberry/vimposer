@@ -27,3 +27,10 @@ class Track:
         if not self.chords[x].notes:
             del self.chords[x]
 
+    def has_more_than_one_note(self) -> bool:
+        more_than_one_chord = len(self.chords.keys()) > 1
+        if more_than_one_chord:
+            return True
+        lone_chord : int = list(self.chords.keys())[0]
+        return self.chords[lone_chord].has_more_than_one_note()
+

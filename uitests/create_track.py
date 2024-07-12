@@ -24,6 +24,8 @@ try:
     v.km.map("tk",v.change_track_up)
     v.km.map("tj",v.change_track_down)
 
+    v.km.map("x",v.delete_cursor_note)
+
     v.km.listen(v.s.s.f.s.getkey)
 finally:
     v.s.s.f.close()
