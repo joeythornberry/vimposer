@@ -23,6 +23,7 @@ try:
     v.km.map("tn",v.create_track)
     v.km.map("tk",v.change_track_up)
     v.km.map("tj",v.change_track_down)
+    v.km.map("tx",v.delete_current_track)
 
     v.km.map("x",v.delete_cursor_note)
 

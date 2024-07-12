@@ -47,6 +47,12 @@ class TrackList:
         self.tracks[self.new_track_id] = Track(self.tcm.assign_track_color(self.new_track_id))
         return self.new_track_id
 
+    def delete_track(self, track : int):
+        del self.tracks[track]
+
+    def only_one_track_exists(self) -> bool:
+        return len(self.tracks.keys()) == 1
+
     def add_note(self,p,x,l,note_track : int):
         self.tracks[note_track].add_note(p,x,l)
 
@@ -176,3 +182,6 @@ class TrackList:
             return False
 
         return True
+
+    def get_track_notes_list(self, track : int):
+        return self.tracks[track].get_notes_list()

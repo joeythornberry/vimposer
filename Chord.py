@@ -28,3 +28,6 @@ class Chord:
     def has_more_than_one_note(self):
         return len(self.notes.keys()) > 1
 
+    def get_notes_list(self) -> list[tuple[int,Note]]:
+        return list(self.notes.items())
+

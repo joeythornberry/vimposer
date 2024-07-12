@@ -68,3 +68,6 @@ class VimposerAPI:
 
     def create_track(self):
         self.s.create_track()
+
+    def delete_current_track(self):
+        self.s.delete_current_track()

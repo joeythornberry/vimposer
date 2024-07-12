@@ -52,7 +52,7 @@ class KeyboardManager:
         for (pattern, _) in self.maps.items():
             if (keypresses in pattern):
                 message = "ERROR: Map unreachable: " + pattern + " is already mapped, but you're trying to map " + keypresses
-                raise TypeError(message)
+                #raise TypeError(message)
             if (pattern in keypresses):
                 message = "ERROR: Map unreachable: " + pattern + " is already mapped, so " + keypresses + " will never be reached"
                 #raise TypeError(message) 

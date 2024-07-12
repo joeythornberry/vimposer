@@ -133,3 +133,13 @@ class Song:
         p,x = self.trax.generate_new_cursor(0,0,self.curT())
         self.cur.set(p,x)
         self.change_track(t)
+
+    def delete_current_track(self):
+        track_to_delete = self.curT()
+        if self.trax.only_one_track_exists():
+            self.create_track()
+        else:
+            self.change_track_up()
+        for p,x,l in self.trax.get_track_notes_list(track_to_delete):
+            self.delete_note(p,x,l,track_to_delete)
+        self.trax.delete_track(track_to_delete)

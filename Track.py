@@ -34,3 +34,10 @@ class Track:
         lone_chord : int = list(self.chords.keys())[0]
         return self.chords[lone_chord].has_more_than_one_note()
 
+    def get_notes_list(self):
+        notes = []
+        for x,c in self.chords.items():
+            for p,n in c.get_notes_list():
+                notes.append((p,x,n.l))
+
+        return notes
