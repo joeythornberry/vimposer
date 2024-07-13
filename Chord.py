@@ -41,3 +41,6 @@ class Chord:
         """Set the length of the note at pitch p in this chord to l."""
         self.notes[p].l = l
 
+    def get_note_length(self, p: int) -> int:
+        """Return the length of the Note at the given pitch in this chord."""
+        return self.notes[p].l

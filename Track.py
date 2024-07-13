@@ -53,3 +53,7 @@ class Track:
     def set_note_length(self, p: int, x: int, l: int):
         """Set the length of the note at the given coords to the given l."""
         self.chords[x].set_note_length(p, l)
+
+    def get_note_length(self, p: int, x: int) -> int:
+        """Return the length of the Note at the given coords in this track."""
+        return self.chords[x].get_note_length(p)

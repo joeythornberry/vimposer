@@ -61,14 +61,7 @@ class TrackList:
         self.tracks[note_track].delete_note(p,x)
 
     def get_length(self,p,x,note_track : int) -> int:
-        t = self.tracks[note_track]
-        if x not in t.chords:
-            raise Exception(f"TRACKLIST ERROR: cannot get length of note ({p},{x}) because it does not exist in track {note_track}")
-        c = t.chords[x]
-        if p not in c.notes:
-            raise Exception(f"TRACKLIST ERROR: cannot get length of note ({p},{x}) because it does not exist in chord {x} on track {note_track}")
-        l =  self.tracks[note_track].chords[x].notes[p].l
-        return l
+        return self.tracks[note_track].get_note_length(p, x)
 
     def calculate_closest_chord(self,old_x,track : int):
         t = self.tracks[track]
