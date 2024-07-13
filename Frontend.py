@@ -86,7 +86,7 @@ class Frontend:
         return len(self.colors)
 
     def paint_pixel(self, d: Drawable):
-        self.s.move(d.y,d.x)
+        self.s.move(d.line,d.char)
 
         icon = "X"
         match d.icon:

@@ -34,8 +34,8 @@ class Screen:
         if type != "background":
             d.set_color(self.get_track_color(pd.track))
 
-        d.set_y(y)
-        d.set_x(x)
+        d.set_line(y)
+        d.set_char(x)
 
         self.f.paint_pixel(d)
 
