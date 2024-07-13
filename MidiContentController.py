@@ -7,7 +7,13 @@ from MidiViewport import MidiViewport
 from Cursor import Cursor
 import curses
 
-class Song:
+class MidiContentController:
+    """Edit and paint to screen MIDI notes.
+
+    Attributes:
+    midi_window -- The MidiWindow that controls the display of MIDI notes.
+    tracklist -- The TrackList that stores note data.
+    """
     s : MidiWindow 
     trax : TrackList
     t : int
