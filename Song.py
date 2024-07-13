@@ -111,7 +111,8 @@ class Song:
         p,x = self.trax.generate_new_cursor(self.curP(),self.curX())
         self.move_cursor(p,x,self.curT(),self.curT(),old_note_exists=False)
 
-    def change_track(self,calculate_track,old_note_exists = True):
+    def change_track(self,calculate_track):
+        old_note_exists = self.curX() != -1 and self.curP() != -1
         old_track = self.curT()
         self.trax.change_track_to(calculate_track)
         p,x = self.trax.generate_new_cursor(self.cur.p,self.cur.x)
@@ -149,8 +150,9 @@ class Song:
     def create_track(self):
         t = self.trax.create_track()
         self.trax.add_note(60,0,4,t)
-        p,x = self.trax.generate_new_cursor(0,0,self.curT())
-        self.cur.set(p,x)
+        #p,x = self.trax.generate_new_cursor(0,0,t)
+        #self.cur.set(p,x)
+        #self.move_cursor(p,x,self.curT(),t,old_note_exists=False)
         self.change_track(t)
 
     def delete_current_track(self):

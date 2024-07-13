@@ -69,8 +69,8 @@ class TrackList:
         l =  self.tracks[note_track].chords[x].notes[p].l
         return l
 
-    def calculate_closest_chord(self,old_x):
-        t = self.tracks[self.t]
+    def calculate_closest_chord(self,old_x,track : int):
+        t = self.tracks[track]
         if old_x in t.chords:
             return old_x
         k = list(t.chords.keys())
@@ -90,10 +90,10 @@ class TrackList:
     def generate_new_cursor(self,old_p,old_x,track = -1):
         if track == -1:
             track = self.t
-        if len(list(self.tracks[self.t].chords.keys())) == 0:
+        if len(list(self.tracks[track].chords.keys())) == 0:
             raise Exception("TRACKLIST ERROR: cannot generate cursor for track {self.t} because it has no notes")
-        new_x = self.calculate_closest_chord(old_x)
-        new_p = self.calculate_closest_pitch(old_p,new_x)
+        new_x = self.calculate_closest_chord(old_x,track)
+        new_p = self.calculate_closest_pitch(old_p,new_x,track)
         return new_p,new_x
 
     def find_cursor_up_target(self,p,x):
@@ -116,8 +116,8 @@ class TrackList:
             return new_p, x 
         return p,x
 
-    def calculate_closest_pitch(self,old_p,new_x):
-        c = self.tracks[self.t].chords[new_x]
+    def calculate_closest_pitch(self,old_p,new_x,track):
+        c = self.tracks[track].chords[new_x]
         closest = 500
         closest_distance = 500
         k = list(c.notes.keys())
@@ -144,7 +144,7 @@ class TrackList:
                 new_x = k[i-1]
             else:
                 new_x = k[i+1]
-            new_p = self.calculate_closest_pitch(p,new_x)
+            new_p = self.calculate_closest_pitch(p,new_x,self.t)
             return new_p, new_x
         return p,x
 
