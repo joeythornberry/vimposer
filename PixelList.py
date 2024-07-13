@@ -17,9 +17,9 @@ class PixelList:
             pd.set_icon(calculate_background_icon(p,x))
             pd.set_track(-1)
             return pd, "background"
-        pd, focused = self.pixels[(p,x)].get_data(current_track)
+        pd = self.pixels[(p,x)].get_data(current_track)
         t : str = "unfocused_track"
-        if focused:
+        if pd.track == current_track:
             t = "focused_track"
         return pd,t
 
