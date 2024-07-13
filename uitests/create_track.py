@@ -35,8 +35,8 @@ try:
     v.km.map("i", lambda : v.shorten_cursor_note(1))
     v.km.map("o", lambda : v.lengthen_cursor_note(1))
 
-    v.km.listen(v.s.s.f.s.getkey)
+    v.km.listen(v.s.s.frontend.s.getkey)
 finally:
-    v.s.s.f.close()
+    v.s.s.frontend.close()
     time.sleep(0.001)
     print(v.s.trax.tracks)

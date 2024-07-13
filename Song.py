@@ -1,14 +1,14 @@
 from Frontend import Frontend
 from NoteData import NoteData
 from PixelList import PixelList
-from Screen import Screen
+from MidiWindow import MidiWindow
 from TrackList import TrackList
 from MidiViewport import MidiViewport
 from Cursor import Cursor
 import curses
 
 class Song:
-    s : Screen
+    s : MidiWindow 
     trax : TrackList
     t : int
     new_track_id : int
@@ -22,7 +22,7 @@ class Song:
         midi_viewport.shift_up(40)
         p = PixelList()
         self.trax = TrackList()
-        self.s = Screen(midi_viewport,f,p,self.trax.tcm.get_track_color)
+        self.s = MidiWindow(midi_viewport,f,p,self.trax.tcm.get_track_color)
         self.cur = Cursor(-1,-1)
         self.create_track()
 
