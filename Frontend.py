@@ -41,7 +41,25 @@ class Frontend:
 
     def paint_ui_element(self,y,x,icon):
         self.s.move(y,x)
-        self.s.addch(icon)
+        char = "X"
+        match icon:
+            case "left_border":
+                char = curses.ACS_VLINE
+            case "right_border":
+                char = curses.ACS_VLINE
+            case "top_border":
+                char = curses.ACS_HLINE
+            case "bottom_border":
+                char = curses.ACS_HLINE
+            case "top_left_corner":
+                char = curses.ACS_ULCORNER
+            case "top_right_corner":
+                char = curses.ACS_URCORNER
+            case "bottom_left_corner":
+                char = curses.ACS_LLCORNER
+            case "bottom_right_corner":
+                char = curses.ACS_LRCORNER
+        self.s.addch(char)
 
     def load_colors(self) -> int:
         self.colors : list[Color] = []

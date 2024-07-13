@@ -1,4 +1,3 @@
-import curses
 class Window:
     def __init__(self):
         self.across = 0
@@ -41,21 +40,21 @@ class Window:
 
         # top
         for x in range(self.left+1, self.right):
-            yield self.top,x,curses.ACS_HLINE
+            yield self.top,x,"top_border"
 
         # bottom
         for x in range(self.left+1, self.right):
-            yield self.bottom,x,curses.ACS_HLINE
+            yield self.bottom,x,"bottom_border"
 
         # left
         for y in range(self.top+1, self.bottom):
-            yield y, self.left, curses.ACS_VLINE
+            yield y, self.left, "left_border"
 
         # right 
         for y in range(self.top+1, self.bottom):
-            yield y, self.right, curses.ACS_VLINE
+            yield y, self.right, "right_border"
 
-        yield self.top,self.left,curses.ACS_ULCORNER
-        yield self.top,self.right,curses.ACS_URCORNER
-        yield self.bottom,self.left,curses.ACS_LLCORNER
-        yield self.bottom,self.right,curses.ACS_LRCORNER
+        yield self.top,self.left,"top_left_corner"
+        yield self.top,self.right,"top_right_corner"
+        yield self.bottom,self.left,"bottom_left_corner"
+        yield self.bottom,self.right,"bottom_right_corner"
