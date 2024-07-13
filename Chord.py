@@ -44,3 +44,16 @@ class Chord:
     def get_note_length(self, p: int) -> int:
         """Return the length of the Note at the given pitch in this chord."""
         return self.notes[p].l
+
+    def calculate_closest_pitch(self, old_p) -> int:
+        """Return the occupied pitch in this chord that is closest to the given pitch."""
+        k = list(self.notes.keys())
+        closest = 0
+        closest_distance = abs(old_p - k[0])
+        for i,p in enumerate(k):
+            distance = abs(old_p - p)
+            if distance < closest_distance:
+                closest = i
+                closest_distance = distance
+
+        return k[closest] 

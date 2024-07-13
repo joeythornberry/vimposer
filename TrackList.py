@@ -68,7 +68,7 @@ class TrackList:
         
     def generate_new_cursor(self,old_p,old_x,track):
         new_x = self.calculate_closest_chord(old_x,track)
-        new_p = self.calculate_closest_pitch(old_p,new_x,track)
+        new_p = self.tracks[track].calculate_closest_pitch(old_p,new_x)
         return new_p,new_x
 
     def find_cursor_up_target(self,p,x):
@@ -91,22 +91,6 @@ class TrackList:
             return new_p, x 
         return p,x
 
-    def calculate_closest_pitch(self,old_p,new_x,track):
-        c = self.tracks[track].chords[new_x]
-        closest = 500
-        closest_distance = 500
-        k = list(c.notes.keys())
-        for i,p in enumerate(k):
-            distance = abs(old_p - p)
-            if distance < closest_distance:
-                closest = i
-                closest_distance = distance
-
-        if closest_distance > 127:
-            raise Exception(f"CHORD ERROR: looking for closest pitch in chord {new_x} but there are no notes in it")
-
-        return k[closest] 
-
     def find_cursor_horizontal_target(self,p,x,move_left : bool):
         t = self.tracks[self.t]
         k = list(t.chords.keys())
@@ -119,7 +103,7 @@ class TrackList:
                 new_x = k[i-1]
             else:
                 new_x = k[i+1]
-            new_p = self.calculate_closest_pitch(p,new_x,self.t)
+            new_p = self.tracks[self.t].calculate_closest_pitch(p,new_x)
             return new_p, new_x
         return p,x
 
