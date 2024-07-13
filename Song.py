@@ -69,6 +69,25 @@ class Song:
         if self.trax.does_note_fit(p,x,l,self.curX(),self.curT()):
             self.move_note(self.curP(),self.curX(),l,p,x,l,self.curT(),move_cursor=True)
 
+    def change_cursor_note_length(self,amount):
+        self.change_note_length(self.curP(),self.curX(),self.curT(),amount,True)
+
+    def change_note_length(self,p,x,track : int,amount : int,is_cursor : bool):
+        old_l = self.trax.get_length(p,x,track)
+        new_l = old_l + amount
+        if new_l <= 0:
+            return
+        if amount > 0 and not self.trax.does_note_fit(p,x+old_l,amount,x,track):
+            return
+        self.trax.set_note_length(p,x,new_l,track)
+        n = NoteData(p,x,new_l)
+        if amount < 0:
+            old_n = NoteData(p,x,old_l)
+            self.s.remove_note(old_n,track)
+            self.s.refresh_note(old_n,track)
+        self.s.set_note(n,track,is_cursor)
+        self.s.refresh_note(n,track)
+
     def set_note_cursor(self,p,x,l,track : int, c : bool):
         n = NoteData(p,x,l)
         self.s.set_note(n,track,c)

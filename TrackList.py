@@ -185,3 +185,6 @@ class TrackList:
 
     def get_track_notes_list(self, track : int):
         return self.tracks[track].get_notes_list()
+
+    def set_note_length(self,p,x,l,track : int):
+        self.tracks[track].set_note_length(p,x,l)

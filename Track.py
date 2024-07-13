@@ -41,3 +41,6 @@ class Track:
                 notes.append((p,x,n.l))
 
         return notes
+    
+    def set_note_length(self,p,x,amount):
+        self.chords[x].set_note_length(p,amount)

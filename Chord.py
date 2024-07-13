@@ -31,3 +31,6 @@ class Chord:
     def get_notes_list(self) -> list[tuple[int,Note]]:
         return list(self.notes.items())
 
+    def set_note_length(self,p,l):
+        self.notes[p].l = l
+

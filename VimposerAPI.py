@@ -71,3 +71,9 @@ class VimposerAPI:
 
     def delete_current_track(self):
         self.s.delete_current_track()
+
+    def lengthen_cursor_note(self,amount):
+        self.s.change_cursor_note_length(amount)
+
+    def shorten_cursor_note(self,amount):
+        self.s.change_cursor_note_length(-amount)
