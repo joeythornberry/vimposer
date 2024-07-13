@@ -44,7 +44,8 @@ class TrackList:
 
     def create_track(self):
         self.new_track_id += 1
-        self.tracks[self.new_track_id] = Track(self.tcm.assign_track_color(self.new_track_id))
+        self.tcm.assign_track_color(self.new_track_id)
+        self.tracks[self.new_track_id] = Track()
         return self.new_track_id
 
     def delete_track(self, track : int):

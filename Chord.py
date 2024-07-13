@@ -37,7 +37,7 @@ class Chord:
         """Return this chord's pitch-Note combinations as a list of (p, Note) tuples."""
         return list(self.notes.items())
 
-    def set_note_length(self, p: int,l: int):
+    def set_note_length(self, p: int, l: int):
         """Set the length of the note at pitch p in this chord to l."""
         self.notes[p].l = l
 
