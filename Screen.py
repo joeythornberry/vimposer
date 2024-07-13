@@ -3,16 +3,16 @@ from PixelList import PixelList
 from PixelData import PixelData
 from NoteData import NoteData
 from Location import Location
-from Window import Window
+from MidiViewport import MidiViewport
 from Frontend import Frontend
 
 class Screen:
-    w : Window
+    midi_viewport: MidiViewport
     f : Frontend
     p : PixelList
 
-    def __init__(self,w : Window, f : Frontend, p : PixelList, get_track_color) -> None:
-        self.w = w
+    def __init__(self, midi_viewport: MidiViewport, f : Frontend, p : PixelList, get_track_color) -> None:
+        self.midi_viewport = midi_viewport
         self.f = f
         self.p = p
         self.get_track_color = get_track_color
@@ -23,7 +23,7 @@ class Screen:
         return [Location(n.p,n.x+i) for i in range(n.l)]
 
     def refresh_location(self, l : Location, current_track: int):
-        y,x,onscreen = self.w.translate_coords(l.p,l.x)
+        y,x,onscreen = self.midi_viewport.translate_coords(l.p,l.x)
         if not onscreen:
             return
 
@@ -45,12 +45,12 @@ class Screen:
             self.refresh_location(l,current_track)
 
     def refresh_full_screen(self, current_track : int):
-        for p,x in self.w.locate_full_screen():
+        for p,x in self.midi_viewport.locate_full_screen():
             l = Location(p,x)
             self.refresh_location(l, current_track)
 
     def draw_window_border(self):
-        for y,x,icon in self.w.yield_border():
+        for y,x,icon in self.midi_viewport.yield_border():
             self.f.paint_ui_element(y,x,icon)
 
     def set_location(self, l : Location, pd : PixelData):
@@ -78,9 +78,9 @@ class Screen:
             self.remove_location(l,t)
 
     def shift_up(self,amount : int,t):
-        self.w.shift_up(amount)
+        self.midi_viewport.shift_up(amount)
         self.refresh_full_screen(t)
 
     def shift_across(self,amount : int,t):
-        self.w.shift_across(amount)
+        self.midi_viewport.shift_across(amount)
         self.refresh_full_screen(t)

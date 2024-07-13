@@ -3,7 +3,7 @@ from NoteData import NoteData
 from PixelList import PixelList
 from Screen import Screen
 from TrackList import TrackList
-from Window import Window
+from MidiViewport import MidiViewport
 from Cursor import Cursor
 import curses
 
@@ -17,12 +17,12 @@ class Song:
     def __init__(self):
         f = Frontend()
         self.colors = f.load_colors()
-        w = Window()
-        w.set_dimensions(0,curses.LINES-1,0,curses.COLS-2)
-        w.shift_up(40)
+        midi_viewport = MidiViewport()
+        midi_viewport.set_dimensions(0,curses.LINES-1,0,curses.COLS-2)
+        midi_viewport.shift_up(40)
         p = PixelList()
         self.trax = TrackList()
-        self.s = Screen(w,f,p,self.trax.tcm.get_track_color)
+        self.s = Screen(midi_viewport,f,p,self.trax.tcm.get_track_color)
         self.cur = Cursor(-1,-1)
         self.create_track()
 
