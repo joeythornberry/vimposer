@@ -1,6 +1,6 @@
 from Track import Track
-from Note import Note
 from TrackColorManager import TrackColorManager
+
 class TrackList:
     tracks : dict[int,Track]
     t : int
@@ -64,28 +64,9 @@ class TrackList:
         return self.tracks[note_track].get_note_length(p, x)
 
     def calculate_closest_chord(self,old_x,track : int):
-        t = self.tracks[track]
-        if old_x in t.chords:
-            return old_x
-        k = list(t.chords.keys())
-        closest = 500000000
-        closest_distance = 500000000
-        for i,x in enumerate(k):
-            distance = abs(old_x - x)
-            if distance < closest_distance:
-                closest = i
-                closest_distance = distance
-
-        if closest_distance > 100000000:
-            raise Exception(f"TRACK ERROR: looking for closest chord in track {self.current_track} but there are no chords in it (or your track is very long)")
-
-        return k[closest] 
+        return self.tracks[track].calculate_closest_chord(old_x)
         
-    def generate_new_cursor(self,old_p,old_x,track = -1):
-        if track == -1:
-            track = self.t
-        if len(list(self.tracks[track].chords.keys())) == 0:
-            raise Exception("TRACKLIST ERROR: cannot generate cursor for track {self.t} because it has no notes")
+    def generate_new_cursor(self,old_p,old_x,track):
         new_x = self.calculate_closest_chord(old_x,track)
         new_p = self.calculate_closest_pitch(old_p,new_x,track)
         return new_p,new_x

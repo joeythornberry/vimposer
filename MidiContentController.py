@@ -114,14 +114,14 @@ class MidiContentController:
         if not self.trax.track_has_more_than_one_note(self.curT()):
             return
         self.delete_note(self.curP(),self.curX(),self.trax.get_length(self.curP(),self.curX(),self.curT()),self.curT())
-        p,x = self.trax.generate_new_cursor(self.curP(),self.curX())
+        p,x = self.trax.generate_new_cursor(self.curP(),self.curX(),self.curT())
         self.move_cursor(p,x,self.curT(),self.curT(),old_note_exists=False)
 
     def change_track(self,calculate_track):
         old_note_exists = self.curX() != -1 and self.curP() != -1
         old_track = self.curT()
         self.trax.change_track_to(calculate_track)
-        p,x = self.trax.generate_new_cursor(self.cur.p,self.cur.x)
+        p,x = self.trax.generate_new_cursor(self.cur.p,self.cur.x,self.curT())
         self.move_cursor(p,x,old_track,self.curT(),old_note_exists)
         self.s.refresh_full_screen(self.curT())
 

@@ -57,3 +57,16 @@ class Track:
     def get_note_length(self, p: int, x: int) -> int:
         """Return the length of the Note at the given coords in this track."""
         return self.chords[x].get_note_length(p)
+
+    def calculate_closest_chord(self, old_x: int) -> int:
+        """Return the occupied x-value closest to the given x-value on this track."""
+        k = list(self.chords.keys())
+        closest = 0
+        closest_distance = abs(old_x - k[0])
+        for i, x in enumerate(k):
+            distance = abs(old_x - x)
+            if distance < closest_distance:
+                closest = i
+                closest_distance = distance
+
+        return k[closest] 
