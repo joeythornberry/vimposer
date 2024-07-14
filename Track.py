@@ -98,3 +98,24 @@ class Track:
 
     def find_cursor_down_target(self, current_p, x):
         return self.chords[x].find_cursor_down_target(current_p), x
+
+    def find_cursor_horizontal_target(self, current_p: int, current_x: int, left: bool):
+        x_values = list(self.chords.keys())
+        x_values.sort()
+        index_of_current_x = x_values.index(current_x)
+
+        can_move = (left and index_of_current_x > 0) or (not left and index_of_current_x < len(x_values) - 1)
+        if can_move:
+            if left:
+                new_x = x_values[index_of_current_x - 1]
+            else:
+                new_x = x_values[index_of_current_x + 1]
+            new_p = self.calculate_closest_pitch(current_p, new_x)
+            return new_p, new_x
+        return current_p, current_x
+
+    def find_cursor_left_target(self, current_p: int, current_x: int):
+        return self.find_cursor_horizontal_target(current_p, current_x, True)
+
+    def find_cursor_right_target(self, current_p: int, current_x: int):
+        return self.find_cursor_horizontal_target(current_p, current_x, False)
