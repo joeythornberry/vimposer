@@ -72,7 +72,7 @@ class Track:
         return k[closest] 
 
     def calculate_closest_pitch(self, old_p, x) -> int:
-        return self.chords[x].calculate_closest_pitch(x)
+        return self.chords[x].calculate_closest_pitch(old_p)
 
     def calculate_closest_coordinates(self, old_p: int, old_x: int) -> tuple[int, int]:
         closest_x = self.calculate_closest_chord(old_x)
@@ -92,3 +92,9 @@ class Track:
             return False
 
         return True
+
+    def find_cursor_up_target(self, current_p, x):
+        return self.chords[x].find_cursor_up_target(current_p), x
+
+    def find_cursor_down_target(self, current_p, x):
+        return self.chords[x].find_cursor_down_target(current_p), x

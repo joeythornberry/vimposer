@@ -57,3 +57,26 @@ class Chord:
                 closest_distance = distance
 
         return k[closest] 
+
+    def find_cursor_vertical_target(self, current_p: int, up: bool) -> int:
+        """Returns higher/lower pitch, if one exists. Direction is determined by the up flag.
+
+        If up is true, attempt to return a higher pitch. If false, attempt to return a lower pitch."""
+        pitches = list(self.notes.keys())
+        pitches.sort()
+        index_of_current_pitch = pitches.index(current_p)
+        if up and index_of_current_pitch < len(pitches) - 1:
+            new_p = pitches[index_of_current_pitch + 1]
+            return new_p
+        if not up and index_of_current_pitch > 0 :
+            new_p = pitches[index_of_current_pitch - 1]
+            return new_p
+        return current_p
+
+    def find_cursor_down_target(self, current_p) -> int:
+        """If this chord has a note at a lower pitch than the given pitch, return it. Otherwise, return the given pitch."""
+        return self.find_cursor_vertical_target(current_p, False)
+
+    def find_cursor_up_target(self, current_p) -> int:
+        """If this chord has a note at a higher pitch than the given pitch, return it. Otherwise, return the given pitch."""
+        return self.find_cursor_vertical_target(current_p, True)

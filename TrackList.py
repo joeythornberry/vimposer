@@ -71,25 +71,11 @@ class TrackList:
         new_p = self.tracks[track].calculate_closest_pitch(old_p,new_x)
         return new_p,new_x
 
-    def find_cursor_up_target(self,p,x):
-        c = self.tracks[self.t].chords[x]
-        k = list(c.notes.keys())
-        k.sort()
-        i = k.index(p)
-        if i < len(k) - 1:
-            new_p = k[i+1]
-            return new_p, x 
-        return p,x
+    def find_cursor_up_target(self, current_p: int, current_x: int):
+        return self.tracks[self.t].find_cursor_up_target(current_p, current_x)
 
-    def find_cursor_down_target(self,p,x):
-        c = self.tracks[self.t].chords[x]
-        k = list(c.notes.keys())
-        k.sort()
-        i = k.index(p)
-        if i > 0 :
-            new_p = k[i-1]
-            return new_p, x 
-        return p,x
+    def find_cursor_down_target(self,current_p: int, current_x: int):
+        return self.tracks[self.t].find_cursor_down_target(current_p, current_x)
 
     def find_cursor_horizontal_target(self,p,x,move_left : bool):
         t = self.tracks[self.t]
