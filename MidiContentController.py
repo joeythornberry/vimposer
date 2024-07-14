@@ -22,18 +22,15 @@ class MidiContentController:
 
     def __init__(self):
         f = Frontend()
-        self.colors = f.load_colors()
+        self.num_colors = f.load_colors()
         midi_viewport = MidiViewport()
         midi_viewport.set_dimensions(0,curses.LINES-1,0,curses.COLS-2)
         midi_viewport.shift_up(40)
         p = PixelList()
-        self.trax = TrackList()
+        self.trax = TrackList(self.num_colors)
         self.s = MidiWindow(midi_viewport,f,p,self.trax.tcm.get_track_color)
         self.cur = Cursor(-1,-1)
         self.create_track()
-
-    def curL(self):
-        return self.trax.get_length(self.cur.p, self.cur.x, self.trax.t)
 
     def curP(self):
         return self.cur.p
@@ -43,6 +40,9 @@ class MidiContentController:
 
     def curT(self):
         return self.trax.current()
+
+    def curL(self):
+        return self.trax.get_length(self.curP(), self.curX(), self.curT())
         
     def new_note_from_cursor(self,p,x):
         successful = self.new_note(p,x,self.curL(),self.curT(),False)
@@ -83,11 +83,11 @@ class MidiContentController:
         new_l = old_l + amount
         if new_l <= 0:
             return
-        if amount > 0 and not self.trax.does_note_fit(p,x+old_l,amount,x,track):
+        if amount > 0 and not self.trax.does_note_fit(p,x+old_l,amount,x,track): # don't extend a note into another note
             return
         self.trax.set_note_length(p,x,new_l,track)
         n = NoteData(p,x,new_l)
-        if amount < 0:
+        if amount < 0: # have to clean up the old note bc the new smaller note won't overwrite all of it
             old_n = NoteData(p,x,old_l)
             self.s.remove_note(old_n,track)
             self.s.refresh_note(old_n,track)
@@ -156,9 +156,6 @@ class MidiContentController:
     def create_track(self):
         t = self.trax.create_track()
         self.trax.add_note(60,0,4,t)
-        #p,x = self.trax.generate_new_cursor(0,0,t)
-        #self.cur.set(p,x)
-        #self.move_cursor(p,x,self.curT(),t,old_note_exists=False)
         self.change_track(t)
 
     def delete_current_track(self):

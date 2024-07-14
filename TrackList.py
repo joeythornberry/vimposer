@@ -7,11 +7,11 @@ class TrackList:
     tcm : TrackColorManager
     new_track_id : int
 
-    def __init__(self):
+    def __init__(self, num_colors: int):
         self.tracks = {}
         self.t = 0
         self.new_track_id = -1
-        self.tcm = TrackColorManager()
+        self.tcm = TrackColorManager(num_colors)
 
     def __repr__(self):
         return str(self.tracks)
