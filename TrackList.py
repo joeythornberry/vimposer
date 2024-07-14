@@ -125,25 +125,11 @@ class TrackList:
     def find_note_right_location(self,p,x):
         return p,x + 1
 
-    def does_note_fit(self,p,x,l,cur_x,track : int) -> bool:
-        tr = self.tracks[track]
-        for chord_x,c in tr.chords.items():
-            if c.pitch_occupied(p):
-                if chord_x == cur_x:
-                    if cur_x != x:
-                        continue # don't want the note itself to block itself from moving
-                if chord_x <= x:
-                    if chord_x + c.notes[p].l > x:
-                        return False
-                if chord_x > x and chord_x < x + l:
-                    return False
-        if x < 0 or p < 0 or p > 127:
-            return False
-
-        return True
-
     def get_track_notes_list(self, track : int):
         return self.tracks[track].get_notes_list()
 
     def set_note_length(self,p,x,l,track : int):
         self.tracks[track].set_note_length(p,x,l)
+
+    def does_note_fit(self, p: int, x: int, l:int, current_x: int, track: int) -> bool:
+        return self.tracks[track].does_note_fit(p, x, l, current_x)

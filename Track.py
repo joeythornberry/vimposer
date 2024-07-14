@@ -78,3 +78,17 @@ class Track:
         closest_x = self.calculate_closest_chord(old_x)
         closest_p = self.chords[closest_x].calculate_closest_pitch(old_p)
         return closest_p, closest_x
+
+    def does_note_fit(self, p: int, x: int, l: int, current_x: int) -> bool:
+        for chord_x, chord in self.chords.items():
+            if chord.pitch_occupied(p):
+                if chord_x == current_x and current_x != x:
+                        continue # don't want the note itself to block itself from moving
+                if chord_x <= x and chord_x + chord.get_note_length(p) > x:
+                        return False
+                if chord_x > x and chord_x < x + l:
+                    return False
+        if x < 0 or p < 0 or p > 127:
+            return False
+
+        return True
