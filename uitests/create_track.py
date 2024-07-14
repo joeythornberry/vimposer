@@ -1,6 +1,4 @@
-import sys
-sys.path.append(".")
-from VimposerAPI import VimposerAPI
+from vimposercore.VimposerAPI import VimposerAPI
 import time
 
 v = VimposerAPI()

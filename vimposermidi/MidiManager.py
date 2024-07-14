@@ -1,13 +1,13 @@
-from Frontend import Frontend
-from NoteData import NoteData
-from PixelList import PixelList
-from MidiWindow import MidiWindow
-from TrackList import TrackList
-from MidiViewport import MidiViewport
-from Cursor import Cursor
+from config.Frontend import Frontend
+from vimposermidi.NoteData import NoteData
+from vimposermidi.PixelList import PixelList
+from vimposermidi.MidiWindow import MidiWindow
+from vimposermidi.TrackMidiManager import TrackMidiManager
+from vimposermidi.MidiViewport import MidiViewport
+from vimposermidi.Cursor import Cursor
 import curses
 
-class MidiContentController:
+class MidiManager:
     """Edit and paint to screen MIDI notes.
 
     Attributes:
@@ -15,7 +15,7 @@ class MidiContentController:
     tracklist -- The TrackList that stores note data.
     """
     s : MidiWindow 
-    trax : TrackList
+    trax : TrackMidiManager
     t : int
     new_track_id : int
     cur : Cursor
@@ -27,7 +27,7 @@ class MidiContentController:
         midi_viewport.set_dimensions(0,curses.LINES-1,0,curses.COLS-2)
         midi_viewport.shift_up(40)
         p = PixelList()
-        self.trax = TrackList(self.num_colors)
+        self.trax = TrackMidiManager(self.num_colors)
         self.s = MidiWindow(midi_viewport,f,p,self.trax.tcm.get_track_color)
         self.cur = Cursor(-1,-1)
         self.create_track()

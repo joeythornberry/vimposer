@@ -1,4 +1,4 @@
-from PixelData import PixelData
+from vimposermidi.PixelData import PixelData
 
 class Pixel:
     """Hold one PixelData for each track given, and return correct one for current track.

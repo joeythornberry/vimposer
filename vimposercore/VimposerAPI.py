@@ -1,16 +1,16 @@
-from KeyboardManager import KeyboardManager
-from MidiContentController import MidiContentController
+from vimposercore.KeyboardManager import KeyboardManager
+from vimposermidi.MidiManager import MidiManager
 
 class VimposerAPI:
     km : KeyboardManager
-    s : MidiContentController
+    s : MidiManager
 
     def send_keys(self,msg):
         pass
 
     def __init__(self):
         self.km = KeyboardManager(self.send_keys)
-        self.s = MidiContentController()
+        self.s = MidiManager()
 
     def sound(self):
         print("we are here")

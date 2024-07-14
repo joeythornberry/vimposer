@@ -1,4 +1,4 @@
-from Note import Note
+from vimposermidi.Note import Note
 
 class Chord:
     """Store all of the Notes for a given x-value."""

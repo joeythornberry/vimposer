@@ -1,4 +1,4 @@
-from PixelData import PixelData
+from vimposermidi.PixelData import PixelData
 
 class Drawable:
     """Store all information the frontend needs to paint a (p, x) location.

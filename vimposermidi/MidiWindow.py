@@ -1,10 +1,10 @@
-from Drawable import Drawable
-from PixelList import PixelList
-from PixelData import PixelData
-from NoteData import NoteData
-from Location import Location
-from MidiViewport import MidiViewport
-from Frontend import Frontend
+from vimposermidi.Drawable import Drawable
+from vimposermidi.PixelList import PixelList
+from vimposermidi.PixelData import PixelData
+from vimposermidi.NoteData import NoteData
+from vimposermidi.Location import Location
+from vimposermidi.MidiViewport import MidiViewport
+from config.Frontend import Frontend
 
 class MidiWindow:
     """Control the display of Midi elements to the screen.

@@ -1,7 +1,7 @@
-from Chord import Chord
-from Note import Note
+from vimposermidi.Chord import Chord
+from vimposermidi.Note import Note
 
-class Track:
+class TrackMidi:
     """Represent a track in a Midi file."""
     chords : dict[int, Chord]
 

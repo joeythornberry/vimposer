@@ -1,6 +1,6 @@
-from Pixel import Pixel
-from PixelData import PixelData
-from calculate_background_icon import calculate_background_icon
+from vimposermidi.Pixel import Pixel
+from vimposermidi.PixelData import PixelData
+from config.calculate_background_icon import calculate_background_icon
 
 class PixelList:
     """Store the Pixels that represent each (p,x) location

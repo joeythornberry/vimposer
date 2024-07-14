@@ -1,4 +1,4 @@
-from Drawable import Drawable
+from vimposermidi.Drawable import Drawable
 import curses
 
 class Color:
