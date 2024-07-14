@@ -71,15 +71,18 @@ class Track:
 
         return k[closest] 
 
-    def calculate_closest_pitch(self, old_p, x) -> int:
+    def calculate_closest_pitch(self, old_p: int, x: int) -> int:
+        """Return the closest occupied pitch to the given pitch in the chord at the given x-value."""
         return self.chords[x].calculate_closest_pitch(old_p)
 
     def calculate_closest_coordinates(self, old_p: int, old_x: int) -> tuple[int, int]:
+        """Return the closest (p, x) coords to the given coords."""
         closest_x = self.calculate_closest_chord(old_x)
         closest_p = self.chords[closest_x].calculate_closest_pitch(old_p)
         return closest_p, closest_x
 
     def does_note_fit(self, p: int, x: int, l: int, current_x: int) -> bool:
+        """Return True if a note with the given coords and length can fit on the screen."""
         for chord_x, chord in self.chords.items():
             if chord.pitch_occupied(p):
                 if chord_x == current_x and current_x != x:
@@ -93,13 +96,19 @@ class Track:
 
         return True
 
-    def find_cursor_up_target(self, current_p, x):
+    def find_cursor_up_target(self, current_p: int, x: int) -> tuple[int, int]:
+        """Return the note above the given note on the same chord, or the given note if none exists."""
         return self.chords[x].find_cursor_up_target(current_p), x
 
-    def find_cursor_down_target(self, current_p, x):
+    def find_cursor_down_target(self, current_p: int, x: int) -> tuple[int, int]:
+        """Return the note below the given note on the same chord, of the given note if none exists."""
         return self.chords[x].find_cursor_down_target(current_p), x
 
     def find_cursor_horizontal_target(self, current_p: int, current_x: int, left: bool):
+        """Find the best note to the left or right of the given location, as determined by the left flag.
+
+        If left is True, find the note to the left. If False, find the note to the right.
+        """
         x_values = list(self.chords.keys())
         x_values.sort()
         index_of_current_x = x_values.index(current_x)
@@ -115,7 +124,9 @@ class Track:
         return current_p, current_x
 
     def find_cursor_left_target(self, current_p: int, current_x: int):
+        """Return the best note to the left of the given location."""
         return self.find_cursor_horizontal_target(current_p, current_x, True)
 
     def find_cursor_right_target(self, current_p: int, current_x: int):
+        """Return the best note to the right of the given location."""
         return self.find_cursor_horizontal_target(current_p, current_x, False)
