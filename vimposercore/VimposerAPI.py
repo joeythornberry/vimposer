@@ -49,16 +49,16 @@ class VimposerAPI:
         self.s.move_cursor_right()
 
     def move_note_right(self):
-        self.s.move_note_in_direction(self.s.curP(),self.s.curX() + 1)
+        self.s.move_cursor_note(self.s.curP(),self.s.curX() + 1)
             
     def move_note_left(self):
-        self.s.move_note_in_direction(self.s.curP(),self.s.curX() - 1)
+        self.s.move_cursor_note(self.s.curP(),self.s.curX() - 1)
 
     def move_note_down(self):
-        self.s.move_note_in_direction(self.s.curP() - 1,self.s.curX())
+        self.s.move_cursor_note(self.s.curP() - 1,self.s.curX())
 
     def move_note_up(self):
-        self.s.move_note_in_direction(self.s.curP() + 1,self.s.curX())
+        self.s.move_cursor_note(self.s.curP() + 1,self.s.curX())
 
     def shift_window_vertical(self,amount : int):
         self.s.shift_up(amount)
