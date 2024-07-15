@@ -33,8 +33,8 @@ try:
     v.km.map("i", lambda : v.shorten_cursor_note(1))
     v.km.map("o", lambda : v.lengthen_cursor_note(1))
 
-    v.km.listen(v.s.s.frontend.s.getkey)
+    v.km.listen(v.s.midi_window.frontend.s.getkey)
 finally:
-    v.s.s.frontend.close()
+    v.s.midi_window.frontend.close()
     time.sleep(0.001)
-    print(v.s.trax.tracks)
+    print(v.s.track_midi_manager.tracks)
