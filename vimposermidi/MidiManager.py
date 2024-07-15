@@ -27,7 +27,7 @@ class MidiManager:
         midi_viewport.shift_up(40)
         p = PixelList()
         self.track_midi_manager = TrackMidiManager(self.num_colors)
-        self.midi_window = MidiWindow(midi_viewport, f, p, self.track_midi_manager.tcm.get_track_color)
+        self.midi_window = MidiWindow(midi_viewport, f, p, self.track_midi_manager.get_track_color)
         self.cursor = Cursor(-1,-1)
         self.create_track()
 
