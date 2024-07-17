@@ -1,0 +1,2 @@
+class RawMidiSong:
+    pass
