@@ -1,29 +1,34 @@
-from vimposerparsing.RawMidiSong import RawMidiSong
-from vimposerparsing.SongMetadata import SongMetadata
-from vimposerparsing.MidiFileParseResult import MidiFileParseResult
-from vimposerparsing.assign_delta_time import assign_delta_time
 import MIDI
+from _collections_abc import Callable
+from vimposerparsing.MidiNoteOn import MidiNoteOn
+from vimposerparsing.MidiNoteCollector import MidiNoteCollector
+from vimposerparsing.MidiTrackAssigner import MidiTrackAssigner
 
-def parse_midi_file(filename: str, tolerance: int) -> MidiFileParseResult:
-    """Parse the given .mid file and return the raw Midi and metadata."""
+def parse_midi_file(filename: str, save_note_callback: Callable[[int, int, int, int], int]):
+    """Parse the given .mid file and pump the notes into save_note_callback."""
 
-    delta_times: list[int] = []
+    midi_track_assigner = MidiTrackAssigner()
+    midi_note_collector = MidiNoteCollector()
 
     midi_file = MIDI.MIDIFile(filename)
     midi_file.parse()
 
-    for midi_track in midi_file:
+    for current_track_id, midi_track in enumerate(midi_file):
         midi_track.parse()
-        last_timestamp = 0
         for midi_event in midi_track:
-            new_delta_time = midi_event.time - last_timestamp
-            processed_new_delta_time, record_new_delta_time = assign_delta_time(delta_times, new_delta_time, tolerance)
-            if record_new_delta_time:
-                delta_times.append(processed_new_delta_time)
-            last_timestamp = midi_event.time
-            
-    midi_file_parse_result = MidiFileParseResult()
-    midi_file_parse_result.delta_times = delta_times
+            match midi_event.header & 240: # first 4 bits of header define event type
+                case 0x90: # Note On
+                    pitch = (int.from_bytes(midi_event.data, byteorder="big") & 0xff00) >> 8
+                    #velocity = int.from_bytes(midi_event.data, byteorder="big") & 0xff
+                    time = midi_event.time
+                    midi_note_collector.push_note_on(pitch, MidiNoteOn(time))
 
-    return midi_file_parse_result
-
+                case 0x80: # Note Off
+                    pitch = (int.from_bytes(midi_event.data, byteorder="big") & 0xff00) >> 8
+                    note_on = midi_note_collector.pop_note_on(pitch)
+                    start_time = note_on.start_time
+                    end_time = midi_event.time
+                    duration = end_time - start_time
+                    channel = midi_event.channel
+                    track = midi_track_assigner.get_track_id(current_track_id, channel)
+                    save_note_callback(pitch, int(start_time/80), int(duration/80), track)
