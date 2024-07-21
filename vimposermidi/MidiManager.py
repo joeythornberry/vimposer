@@ -5,10 +5,8 @@ from vimposermidi.MidiWindow import MidiWindow
 from vimposermidi.TrackMidiManager import TrackMidiManager
 from vimposermidi.MidiViewport import MidiViewport
 from vimposermidi.Cursor import Cursor
-from config.DefaultFrontend import DefaultFrontend
-import curses
-
 from vimposermidi.Frontend import Frontend
+
 class MidiManager:
     """Edit and paint to screen MIDI notes.
 
@@ -26,7 +24,7 @@ class MidiManager:
         midi_viewport = MidiViewport()
 
         terminal_size = get_terminal_size()
-        midi_viewport.set_dimensions(0, terminal_size.lines, 0, terminal_size.columns)
+        midi_viewport.set_dimensions(0, terminal_size.lines-1, 0, terminal_size.columns-2)
         midi_viewport.shift_up(40)
         p = PixelList()
         self.track_midi_manager = TrackMidiManager(self.num_colors)
