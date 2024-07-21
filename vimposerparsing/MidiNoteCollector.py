@@ -15,12 +15,14 @@ class MidiNoteCollector:
         """Mark the given pitch as occupied by the given note."""
         self.pitch_to_note_map[pitch] = note_on
 
-    def pop_note_on(self, pitch: int) -> MidiNoteOn:
+    def pop_note_on(self, pitch: int) -> tuple[MidiNoteOn, bool]:
         """Return the MidiNoteOn occupying the given pitch, and then free the pitch."""
-        assert(pitch in self.pitch_to_note_map)
+        if pitch not in self.pitch_to_note_map:
+            return MidiNoteOn(0), False
+
         note_on = self.pitch_to_note_map[pitch]
         del self.pitch_to_note_map[pitch]
-        return note_on
+        return note_on, True
 
     def __repr__(self):
         return str(self.pitch_to_note_map)

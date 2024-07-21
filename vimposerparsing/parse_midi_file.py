@@ -40,15 +40,18 @@ def parse_midi_file(
 
                 case 0x80: # Note Off
                     pitch = (int.from_bytes(midi_event.data, byteorder="big") & 0xff00) >> 8
-                    note_on = midi_note_collector.pop_note_on(pitch)
-                    start_time = note_on.start_time
-                    end_time = quantize(midi_event.time, ticks_per_char)
-                    duration = end_time - start_time
-                    channel = midi_event.channel
-                    track = midi_track_assigner.get_track_id(current_track_id, channel)
-                    save_note_callback(
-                            pitch,
-                            start_time,
-                            duration,
-                            track
-                            )
+                    note_on, exists = midi_note_collector.pop_note_on(pitch)
+                    if exists:
+                        start_time = note_on.start_time
+                        end_time = quantize(midi_event.time, ticks_per_char)
+                        duration = end_time - start_time
+
+                        if duration > 0:
+                            channel = midi_event.channel
+                            track = midi_track_assigner.get_track_id(current_track_id, channel)
+                            save_note_callback(
+                                    pitch,
+                                    start_time,
+                                    duration,
+                                    track
+                                    )

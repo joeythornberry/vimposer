@@ -12,7 +12,7 @@ class MidiTrackAssigner:
         Creates a new track id if none exists.
         """
         existing_track_id = self.raw_track_and_channel_to_track_map.get((raw_track, channel), None)
-        if existing_track_id:
+        if existing_track_id != None:
             return existing_track_id
         else:
             new_id = self.next_track_id
