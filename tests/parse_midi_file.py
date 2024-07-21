@@ -1,3 +1,4 @@
+from vimposerparsing.TicksPerCharCalculator import TicksPerCharCalculator
 from vimposerparsing.parse_midi_file import parse_midi_file
 
 class MockNote:
@@ -31,8 +32,14 @@ class MockSaveNote:
         self.mock_notes.append(mock_note)
         return 0
 
+calculate_ticks_per_char = TicksPerCharCalculator(6)
+
 mock_save_note = MockSaveNote()
-parse_midi_file("MIDI/quantized_triplets.mid", mock_save_note)
+parse_midi_file(
+        "MIDI/quantized_triplets.mid",
+        mock_save_note,
+        calculate_ticks_per_char
+        )
 
 assert mock_save_note.num_calls == 9
 assert len(mock_save_note.mock_notes) == 9
@@ -41,6 +48,6 @@ assert mock_save_note.mock_notes[1].x == 0
 assert mock_save_note.mock_notes[0].p == 60
 assert mock_save_note.mock_notes[1].p == 48
 assert mock_save_note.mock_notes[0].track == 0
-print("all tests passed")
 assert mock_save_note.mock_notes[0].l == 6
 assert mock_save_note.mock_notes[1].l == 8
+print("all tests passed")

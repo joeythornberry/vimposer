@@ -4,7 +4,11 @@ from vimposerparsing.MidiNoteOn import MidiNoteOn
 from vimposerparsing.MidiNoteCollector import MidiNoteCollector
 from vimposerparsing.MidiTrackAssigner import MidiTrackAssigner
 
-def parse_midi_file(filename: str, save_note_callback: Callable[[int, int, int, int], int]):
+def parse_midi_file(
+        filename: str,
+        save_note_callback: Callable[[int, int, int, int], int],
+        calculate_ticks_per_char: Callable[[int],int]
+        ):
     """Parse the given .mid file and pump the notes into save_note_callback."""
 
     midi_track_assigner = MidiTrackAssigner()
@@ -12,6 +16,8 @@ def parse_midi_file(filename: str, save_note_callback: Callable[[int, int, int, 
 
     midi_file = MIDI.MIDIFile(filename)
     midi_file.parse()
+
+    ticks_per_char = calculate_ticks_per_char(midi_file.division.division)
 
     for current_track_id, midi_track in enumerate(midi_file):
         midi_track.parse()
@@ -31,4 +37,9 @@ def parse_midi_file(filename: str, save_note_callback: Callable[[int, int, int, 
                     duration = end_time - start_time
                     channel = midi_event.channel
                     track = midi_track_assigner.get_track_id(current_track_id, channel)
-                    save_note_callback(pitch, int(start_time/80), int(duration/80), track)
+                    save_note_callback(
+                            pitch,
+                            int(start_time / ticks_per_char),
+                            int(duration / ticks_per_char),
+                            track
+                            )
