@@ -1,3 +1,4 @@
+from os import get_terminal_size
 from vimposermidi.NoteData import NoteData
 from vimposermidi.PixelList import PixelList
 from vimposermidi.MidiWindow import MidiWindow
@@ -23,7 +24,9 @@ class MidiManager:
         """Init a MidiManager with default track and the given frontend."""
         self.num_colors = frontend.load_colors()
         midi_viewport = MidiViewport()
-        midi_viewport.set_dimensions(0, curses.LINES-1, 0, curses.COLS-2)
+
+        terminal_size = get_terminal_size()
+        midi_viewport.set_dimensions(0, terminal_size.lines, 0, terminal_size.columns)
         midi_viewport.shift_up(40)
         p = PixelList()
         self.track_midi_manager = TrackMidiManager(self.num_colors)
