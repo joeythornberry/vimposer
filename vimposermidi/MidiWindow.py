@@ -4,7 +4,7 @@ from vimposermidi.PixelData import PixelData
 from vimposermidi.NoteData import NoteData
 from vimposermidi.Location import Location
 from vimposermidi.MidiViewport import MidiViewport
-from config.Frontend import Frontend
+from vimposermidi.Frontend import Frontend
 
 class MidiWindow:
     """Control the display of Midi elements to the screen.

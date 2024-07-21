@@ -1,10 +1,11 @@
+from config.DefaultFrontend import DefaultFrontend
 from vimposercore.VimposerAPI import VimposerAPI
 from vimposercore.KeyboardManager import KeyboardManager
 
 from vimposerparsing.TicksPerCharCalculator import TicksPerCharCalculator
 from vimposerparsing.parse_midi_file import parse_midi_file
 
-v = VimposerAPI()
+v = VimposerAPI(DefaultFrontend())
 
 v.km.map("F",v.make_note_right)
 v.km.map("A",v.make_note_left)

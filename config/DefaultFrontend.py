@@ -1,4 +1,5 @@
 from vimposermidi.Drawable import Drawable
+from vimposermidi.Frontend import Frontend
 import curses
 
 class Color:
@@ -8,7 +9,7 @@ class Color:
     def set_background(self, background : int):
         self.b = background
 
-class Frontend:
+class DefaultFrontend(Frontend):
     def __init__(self):
         self.s = curses.initscr()
         curses.curs_set(0)
