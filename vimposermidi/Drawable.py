@@ -6,7 +6,7 @@ class Drawable:
     Attributes:
     icon -- What kind of thing is this pixel representing?
     icon_type -- Extra information that might influence how this pixel is drawn.
-    cursor -- Is this pixel part of a cursored noted?
+    cursor -- Is this pixel part of a cursored note?
     color -- What color is this pixel?
     line, char -- The coordinates of the pixel.
     """
@@ -22,6 +22,13 @@ class Drawable:
         """Init a Drawable, using the cursor and icon values of the given PixelData"""
         self.cursor = pixel_data.cursor
         self.icon = pixel_data.icon
+        self.icon_type = "unset"
+        self.color = -1
+        self.line = -1
+        self.char = -1
+
+    def __repr__(self) -> str:
+        return f"{self.icon=}\n{self.icon_type=}\n{self.cursor=}\n{self.color=}\n{self.line=}\n{self.char=}\n"
 
     def set_icon_type(self,new_icon: str):
         """Set the type value of the drawable."""
