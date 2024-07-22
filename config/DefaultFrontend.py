@@ -1,5 +1,5 @@
 from vimposermidi.Drawable import Drawable
-from vimposermidi.Frontend import Frontend
+from vimposermidi.VimposerFrontend import VimposerFrontend
 import curses
 
 class Color:
@@ -9,7 +9,7 @@ class Color:
     def set_background(self, background : int):
         self.b = background
 
-class DefaultFrontend(Frontend):
+class Frontend(VimposerFrontend):
     def __init__(self):
         self.s = curses.initscr()
         curses.curs_set(0)

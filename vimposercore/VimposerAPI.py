@@ -1,5 +1,5 @@
 from vimposercore.KeyboardManager import KeyboardManager
-from vimposermidi.Frontend import Frontend
+from vimposermidi.VimposerFrontend import VimposerFrontend
 from vimposermidi.MidiManager import MidiManager
 
 class VimposerAPI:
@@ -9,7 +9,7 @@ class VimposerAPI:
     def send_keys(self,msg):
         pass
 
-    def __init__(self, frontend: Frontend):
+    def __init__(self, frontend: VimposerFrontend):
         self.km = KeyboardManager(self.send_keys)
         self.s = MidiManager(frontend)
 

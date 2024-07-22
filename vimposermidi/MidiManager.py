@@ -5,7 +5,7 @@ from vimposermidi.MidiWindow import MidiWindow
 from vimposermidi.TrackMidiManager import TrackMidiManager
 from vimposermidi.MidiViewport import MidiViewport
 from vimposermidi.Cursor import Cursor
-from vimposermidi.Frontend import Frontend
+from vimposermidi.VimposerFrontend import VimposerFrontend
 
 class MidiManager:
     """Edit and paint to screen MIDI notes.
@@ -18,7 +18,7 @@ class MidiManager:
     track_midi_manager: TrackMidiManager
     cursor: Cursor
 
-    def __init__(self, frontend: Frontend):
+    def __init__(self, frontend: VimposerFrontend):
         """Init a MidiManager with default track and the given frontend."""
         self.num_colors = frontend.load_colors()
         midi_viewport = MidiViewport()

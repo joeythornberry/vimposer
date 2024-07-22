@@ -1,7 +1,7 @@
 from abc import ABC, ABCMeta, abstractmethod
 from vimposermidi.Drawable import Drawable
 
-class Frontend(metaclass=ABCMeta):
+class VimposerFrontend(metaclass=ABCMeta):
     @abstractmethod
     def __init__(self):
         """Set up everything the frontend needs to function, like the screen and such."""

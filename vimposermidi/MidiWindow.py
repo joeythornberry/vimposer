@@ -4,7 +4,7 @@ from vimposermidi.PixelData import PixelData
 from vimposermidi.NoteData import NoteData
 from vimposermidi.Location import Location
 from vimposermidi.MidiViewport import MidiViewport
-from vimposermidi.Frontend import Frontend
+from vimposermidi.VimposerFrontend import VimposerFrontend
 
 class MidiWindow:
     """Control the display of Midi elements to the screen.
@@ -15,10 +15,10 @@ class MidiWindow:
     pixel_list -- The PixelList that stores screen data.
     """
     midi_viewport: MidiViewport
-    frontend: Frontend
+    frontend: VimposerFrontend
     pixel_list: PixelList
 
-    def __init__(self, midi_viewport: MidiViewport, frontend : Frontend, pixel_list : PixelList, get_track_color) -> None:
+    def __init__(self, midi_viewport: MidiViewport, frontend : VimposerFrontend, pixel_list : PixelList, get_track_color) -> None:
         """Init a MidiWindow, and then refresh the screen."""
         self.midi_viewport = midi_viewport
         self.frontend = frontend
