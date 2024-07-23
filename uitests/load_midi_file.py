@@ -2,10 +2,11 @@ from config.DefaultFrontend import Frontend
 from vimposercore.VimposerAPI import VimposerAPI
 from vimposercore.KeyboardManager import KeyboardManager
 
+from vimposermidi.MidiViewport import MidiViewport
 from vimposerparsing.TicksPerCharCalculator import TicksPerCharCalculator
 from vimposerparsing.parse_midi_file import parse_midi_file
 
-v = VimposerAPI(Frontend())
+v = VimposerAPI(Frontend(), MidiViewport())
 
 v.km.map("F",v.make_note_right)
 v.km.map("A",v.make_note_left)
@@ -39,8 +40,8 @@ v.km.map("o", lambda : v.lengthen_cursor_note(1))
 
 def save_note_callback(p: int, x: int, l: int, track: int) -> int:
     if len(v.midi_manager.track_midi_manager.tracks) <= track:
-        v.create_track()
-        return save_note_callback(p, x, l, track)
+        v.create_track(p, x, l)
+        return 0
     else:
         v.midi_manager.new_note(p, x, l, track, False)
         return 0

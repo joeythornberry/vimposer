@@ -13,6 +13,12 @@ class Chord:
             notestring += f" {key}: {n},"
         return f"[{notestring}]"
 
+    def has_note(self, p: int, l: int) -> bool:
+        """Return True if this chord has a note of the given length at the given pitch."""
+        if p not in self.notes:
+            return False
+        return self.notes[p].l == l
+
     def pitch_occupied(self, p: int) -> bool:
         """Return True if this chord contains a note at the given pitch"""
         return p in self.notes

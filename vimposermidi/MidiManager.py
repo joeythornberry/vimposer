@@ -21,7 +21,6 @@ class MidiManager:
     def __init__(self, frontend: VimposerFrontend, midi_viewport: MidiViewport):
         """Init a MidiManager with default track and the given frontend."""
         self.num_colors = frontend.load_colors()
-
         terminal_size = get_terminal_size()
         midi_viewport.set_dimensions(0, terminal_size.lines-1, 0, terminal_size.columns-2)
         midi_viewport.shift_up(40)
@@ -29,7 +28,6 @@ class MidiManager:
         self.track_midi_manager = TrackMidiManager(self.num_colors)
         self.midi_window = MidiWindow(midi_viewport, frontend, p, self.track_midi_manager.get_track_color)
         self.cursor = Cursor(-1,-1)
-        self.create_track()
 
     def curP(self) -> int:
         """Return the pitch of the cursored note."""
@@ -175,10 +173,10 @@ class MidiManager:
         """Shift the Midi viewport to the right by the specified amount. A negative amount will shift the viewport to the left."""
         self.midi_window.shift_across(amount, self.curT())
 
-    def create_track(self):
+    def create_track(self, starting_note_p: int = 60, starting_note_x: int = 0, starting_note_l: int = 6):
         """Create a new track, and make it the current track."""
         t = self.track_midi_manager.create_track()
-        self.track_midi_manager.add_note(60, 0, 4, t)
+        self.track_midi_manager.add_note(starting_note_p, starting_note_x, starting_note_l, t)
         self.change_track(t)
 
     def delete_current_track(self):

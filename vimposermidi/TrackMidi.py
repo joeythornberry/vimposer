@@ -15,6 +15,12 @@ class TrackMidi:
             chordstring += f"\t{c}\n"
         return f"\n\tTRACK\n\t{chordstring}\tEND TRACK\n"
 
+    def has_note(self, p: int, x: int, l: int) -> bool:
+        """Return True if the given chord has a note of the given pitch and length."""
+        if x not in self.chords:
+            return False
+        return self.chords[x].has_note(p, l)
+
     def add_note(self, p: int, x: int, l: int):
         """Add a note to this track at the given coords. Create a Chord if none exists at this x."""
         if x not in self.chords:

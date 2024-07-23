@@ -68,8 +68,8 @@ class VimposerAPI:
     def shift_window_horizontal(self,amount : int):
         self.midi_manager.shift_across(amount)
 
-    def create_track(self):
-        self.midi_manager.create_track()
+    def create_track(self, starting_note_p: int = 60, starting_note_x: int = 0, starting_note_l: int = 6):
+        self.midi_manager.create_track(starting_note_p, starting_note_x, starting_note_l)
 
     def delete_current_track(self):
         self.midi_manager.delete_current_track()

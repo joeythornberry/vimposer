@@ -18,6 +18,12 @@ class TrackMidiManager:
     def __repr__(self):
         return str(self.tracks)
 
+    def has_note(self, p: int, x: int, l: int, track: int) -> bool:
+        """Return True if the given track contains a note of the given p, x, and l."""
+        if track not in self.tracks:
+            return False
+        return self.tracks[track].has_note(p, x, l)
+
     def current(self) -> int:
         """Return the currently focused track."""
         return self.current_track
