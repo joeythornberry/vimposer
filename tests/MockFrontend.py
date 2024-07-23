@@ -16,18 +16,26 @@ class MockFrontend(VimposerFrontend):
         return self.num_colors
 
     def paint_pixel(self, d: Drawable):
+        if d.color == -1:
+            return
         self.pixels[d.line, d.char] = d
 
     def has_note(self, line: int, char: int, l: int) -> tuple[bool, str]:
+        if not (line, char) in self.pixels:
+            return False, f"no pixel at {line}, {char}"
         note_start_drawable = self.pixels[line, char]
         if not note_start_drawable.icon == "note_start":
             return False, "could not find note_start"
 
         for i_char in range(char + 1,char + l - 2):
+            if not (line, char) in self.pixels:
+                return False, f"no pixel at {line}, {char}"
             note_middle_drawable = self.pixels[line, i_char]
             if not note_middle_drawable.icon == "note_middle":
                 return False, "could not find note_middle"
 
+        if not (line, char) in self.pixels:
+            return False, f"no pixel at {line}, {char}"
         note_end_drawable = self.pixels[line, char + l - 1]
         if not note_end_drawable.icon == "note_end":
             return False, "could not find note_end"

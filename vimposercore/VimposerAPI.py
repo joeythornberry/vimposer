@@ -1,4 +1,5 @@
 from vimposercore.KeyboardManager import KeyboardManager
+from vimposermidi.MidiViewport import MidiViewport
 from vimposermidi.VimposerFrontend import VimposerFrontend
 from vimposermidi.MidiManager import MidiManager
 
@@ -9,9 +10,9 @@ class VimposerAPI:
     def send_keys(self,msg):
         pass
 
-    def __init__(self, frontend: VimposerFrontend):
+    def __init__(self, frontend: VimposerFrontend, midi_viewport: MidiViewport):
         self.km = KeyboardManager(self.send_keys)
-        self.midi_manager = MidiManager(frontend)
+        self.midi_manager = MidiManager(frontend, midi_viewport)
 
     def sound(self):
         print("we are here")
