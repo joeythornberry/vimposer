@@ -47,7 +47,7 @@ def save_note_callback(p: int, x: int, l: int, track: int) -> int:
         return 0
 
 parse_midi_file(
-        "MIDI/d_minor_scale.mid",
+        "MIDI/bwv1052a.mid",
         save_note_callback,
         TicksPerCharCalculator(12)
         )
