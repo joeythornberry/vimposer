@@ -4,67 +4,36 @@
 #include <string.h>
 #include <wchar.h>
 
-char * wchar_t_to_const_char(wchar_t * wchar_t_string) {
-	size_t len = wcslen(wchar_t_string);
-	char * char_string = malloc(len + 1);
-	for (uint8_t i = 0; i < len; i++) {
-		char_string[i] = wchar_t_string[i];
-	}
-	char_string[len] = '\0';
-	return char_string;
-}
+#include "MidiFile.h"
+#include "BinaryDebug.h"
+#include "Conversions.h"
 
-const char read_bit(uint8_t input, uint8_t bit_to_read) {
-	uint8_t bit = input & (1 << bit_to_read);
-	if (bit == 0) {
-		return '0';
-	} else {
-		return '1';
-	}
-}
+int read_track_chunk(MidiFile * midifile, uint16_t tracks_to_read) {
 
-void binary_repr(char dest[8], uint8_t input) {
-	for(uint8_t i = 0; i < 8; i++) {
-		dest[i] = read_bit(input, i);
-	}
-}
+	if (tracks_to_read == 0) return 0;
 
-uint32_t read32(FILE * file) {
-	return (getc(file) << 24) | (getc(file) << 16) | (getc(file) << 8) | getc(file);
-}
+	uint64_t starting_bytes_read = midifile->bytes_read;
 
-uint16_t read16(FILE * file) {
-	return (getc(file) << 8) | getc(file);
-}
-
-typedef struct {
-	uint16_t tracks_to_read;
-} MidiParseContext;
-
-int read_track_chunk(FILE * midifile, MidiParseContext midi_parse_context) {
 	char MTrk[4];
-	for (uint8_t i = 0; i < 4; i++) MTrk[i] = getc(midifile);
+	for (uint8_t i = 0; i < 4; i++) MTrk[i] = read8(midifile);
 
 	if (strcmp(MTrk, "MTrk") != 0) return 1;
 	printf("this is a track\n");
 
 	uint32_t track_length = read32(midifile);
 	for (uint32_t i = 0; i < track_length; i++) {
-		getc(midifile);
+		read8(midifile);
 	}
 
-	uint16_t new_tracks_to_read = midi_parse_context.tracks_to_read - 1;
-	if (new_tracks_to_read == 0) return 0;
+	if (midifile->bytes_read - starting_bytes_read != track_length + 4 + 4) printf("UHOH: track lengths %ld and %d do not add up\n", midifile->bytes_read - starting_bytes_read, track_length + 4 + 4);
 
-	MidiParseContext new_midi_parse_context;
-	new_midi_parse_context.tracks_to_read = new_tracks_to_read;
-	return read_track_chunk(midifile, new_midi_parse_context);
+	return read_track_chunk(midifile, tracks_to_read - 1);
 }
 
-int read_header_chunk(FILE * midifile) {
+int read_header_chunk(MidiFile * midifile) {
 
 	char MThd[4];
-	for (uint8_t i = 0; i < 4; i++) MThd[i] = getc(midifile);
+	for (uint8_t i = 0; i < 4; i++) MThd[i] = read8(midifile);
 
 	if (strcmp(MThd, "MThd") != 0) return 1;
 
@@ -77,14 +46,11 @@ int read_header_chunk(FILE * midifile) {
 	int is_ticks_mode = (division & (1 << 15)) != 0;
 
 	// we only know how to read 6-byte headers, so toss any extra bytes
-	for (uint32_t i = header_length; i > 6; i--) getc(midifile);
+	for (uint32_t i = header_length; i > 6; i--) read8(midifile);
 
 	if (ntrks == 0) return 0;
 
-	MidiParseContext midi_parse_context;
-	midi_parse_context.tracks_to_read = ntrks;
-
-	return read_track_chunk(midifile, midi_parse_context);
+	return read_track_chunk(midifile, ntrks);
 }
 
 const char * parse_midi_file(wchar_t * filename_wchar_p, int (*save_note)(int, int, int, int)) {
@@ -92,15 +58,14 @@ const char * parse_midi_file(wchar_t * filename_wchar_p, int (*save_note)(int, i
 	char * filename = wchar_t_to_const_char(filename_wchar_p);
 	printf("Parsing MIDI File: %s\n", filename);
 
-	FILE * midifile;
-	midifile = fopen(filename, "rb");
-	if (midifile == NULL) {
-		return "Failed to open file.";
-	}
+	MidiFile midifile;
+	midifile.bytes_read = 0;
+	midifile.fp = fopen(filename, "rb");
+	if (midifile.fp == NULL) return "Failed to open file.";
 
-	read_header_chunk(midifile);
+	read_header_chunk(&midifile);
 
-	fclose(midifile);
+	fclose(midifile.fp);
 
 	free(filename);
 	return "Midi parse successful.";
