@@ -11,8 +11,7 @@ def load_midi_file(filename: str, save_note):
     libmidiloader = CDLL(library_name)
 
     filename_wchar_p = c_wchar_p(filename)
-    libmidiloader.parse_midi_file(filename_wchar_p, save_note)
-
+    result = libmidiloader.parse_midi_file(filename_wchar_p, save_note)
 
 if __name__ == "__main__":
     load_midi_file("../MIDI/d_minor_scale.mid", save_note)
