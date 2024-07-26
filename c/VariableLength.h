@@ -1,3 +1,6 @@
+#ifndef VARIABLELENGTH_H
+#define VARIABLELENGTH_H
+
 #include "BinaryDebug.h"
 #include "MidiFile.h"
 
@@ -19,3 +22,5 @@ uint32_t readVariableLength(MidiFile * midifile) {
 
 	return (current_byte << (7 * num_next_bytes)) | next_bytes;
 }
+
+#endif
