@@ -1,3 +1,6 @@
+#ifndef BINARYDEBUG_H
+#define BINARYDEBUG_H
+
 #include <stdio.h>
 #include <stdint.h>
 
@@ -15,3 +18,5 @@ void binary_repr(char dest[8], uint8_t input) {
 		dest[i] = read_bit(input, i);
 	}
 }
+
+#endif

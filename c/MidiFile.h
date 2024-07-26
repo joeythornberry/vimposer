@@ -1,3 +1,6 @@
+#ifndef MIDIFILE_H
+#define MIDIFILE_H
+
 #include <stdio.h>
 #include <stdint.h>
 
@@ -21,3 +24,4 @@ uint8_t read8(MidiFile * file) {
 	return getc(file->fp);
 }
 
+#endif

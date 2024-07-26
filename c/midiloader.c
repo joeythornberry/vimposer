@@ -7,6 +7,61 @@
 #include "MidiFile.h"
 #include "BinaryDebug.h"
 #include "Conversions.h"
+#include "VariableLength.h"
+
+int read_event(MidiFile * midifile, uint8_t running_status) {
+	uint32_t dt = readVariableLength(midifile);
+	printf("delta time: %d\n", dt);
+
+	uint8_t event_code = read8(midifile);
+
+	if (event_code == 0xFF) {
+		uint8_t meta_event_type = read8(midifile);
+		printf("meta-event type: %d\n", meta_event_type);
+		uint32_t event_length = readVariableLength(midifile);
+		for (int i = 0; i < event_length; i++) read8(midifile);
+
+		if (meta_event_type == 0x2F) return 0; // end of track
+		
+		return read_event(midifile, 0);
+						       
+	} 
+
+	if (event_code == 0xF0) {
+		uint32_t event_length = readVariableLength(midifile);
+		printf("sysex event length: %d", event_length);
+		for (int i = 0; i < event_length; i ++) read8(midifile);
+
+		return read_event(midifile, 0);
+	} 
+
+	uint8_t first_data_byte;
+	if (event_code < 0b10000000) {
+		first_data_byte = event_code;
+		event_code = running_status;
+	} else {
+		first_data_byte = read8(midifile);
+	}
+
+	switch (event_code & 0xF0) {
+		case 0x80:
+			printf("voice note off\n");
+			uint8_t second_data_byte = read8(midifile);
+			break;
+		case 0x90:
+			printf("voice note on\n");
+			uint8_t second_data_byte2 = read8(midifile);
+			break;
+		case 0xB0: read8(midifile); break; // VoiceControlChange 2
+		case 0xE0: read8(midifile); break; // VoicePitchBend 2
+		case 0xA0: read8(midifile); break;// VoiceAftertouch 2
+		case 0xC0: break;// VoiceProgramChange 1
+		case 0xD0: break;// VoiceChannelPressure 1
+	}
+	return read_event(midifile, event_code);
+
+
+}
 
 int read_track_chunk(MidiFile * midifile, uint16_t tracks_to_read) {
 
@@ -21,9 +76,8 @@ int read_track_chunk(MidiFile * midifile, uint16_t tracks_to_read) {
 	printf("this is a track\n");
 
 	uint32_t track_length = read32(midifile);
-	for (uint32_t i = 0; i < track_length; i++) {
-		read8(midifile);
-	}
+
+	read_event(midifile, 0);
 
 	if (midifile->bytes_read - starting_bytes_read != track_length + 4 + 4) printf("UHOH: track lengths %ld and %d do not add up\n", midifile->bytes_read - starting_bytes_read, track_length + 4 + 4);
 
