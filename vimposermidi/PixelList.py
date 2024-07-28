@@ -1,6 +1,6 @@
 from vimposermidi.Pixel import Pixel
 from vimposermidi.PixelData import PixelData
-from config.Background import is_measure_start, calculate_background_icon
+from config.Background import get_chars_from_measure_start, calculate_background_icon
 from vimposermidi.BackgroundPixelManager import BackgroundPixelManager
 
 class PixelList:
@@ -35,12 +35,15 @@ class PixelList:
         """
         if (p,x) not in self.pixels:
             background_data = PixelData()
-            background_data.set_icon(calculate_background_icon(p,x))
             background_data.set_track(-1)
-            prev_x, prev_is_measure_start = self.background_pixel_manager.get_prev_data()
-            pixel_is_measure_start = is_measure_start(x, prev_x, prev_is_measure_start)
-            self.background_pixel_manager.set_prev_data(x, pixel_is_measure_start)
-            icon_type: str = "measure_start" if pixel_is_measure_start else "background"
+
+            prev_x, prev_chars_from_measure_start = self.background_pixel_manager.get_prev_data()
+            chars_from_measure_start = get_chars_from_measure_start(x, prev_x, prev_chars_from_measure_start)
+            self.background_pixel_manager.set_prev_data(x, chars_from_measure_start)
+
+            background_data.set_icon(calculate_background_icon(p, chars_from_measure_start))
+
+            icon_type: str = "background"
             return background_data, icon_type
 
         fetched_data: PixelData = self.pixels[(p,x)].get_data(current_track)
