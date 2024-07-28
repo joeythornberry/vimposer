@@ -41,7 +41,7 @@ class MidiWindow:
         drawable = Drawable(pixel_data)
         drawable.set_type(icon_type)
 
-        if icon_type != "background":
+        if icon_type != "background" and icon_type != "measure_start":
             drawable.set_color(self.get_track_color(pixel_data.track))
 
         drawable.set_line(y)

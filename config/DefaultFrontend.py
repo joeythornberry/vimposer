@@ -111,6 +111,9 @@ class Frontend(VimposerFrontend):
             case "background":
                 self.s.attron(curses.color_pair(self.weak_ui_color))
                 icon = d.icon
+            case "measure_start":
+                self.s.attron(curses.color_pair(self.weak_ui_color))
+                icon = "|"
             case "focused_track":
                 self.s.attron(curses.color_pair(self.colors[d.color].b))
             case "unfocused_track":

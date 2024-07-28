@@ -67,9 +67,9 @@ class MidiViewport:
 
     def locate_full_screen(self):
         """Yield all (p, x) coordinate pairs that are currently visible on the screen"""
-        for y in range(self.top,self.bottom):
-            for x in range(self.left,self.right):
-                yield self.translate_coords_reverse(y,x)
+        for x in range(self.left,self.right):
+            for y in range(self.top,self.bottom):
+                    yield self.translate_coords_reverse(y,x)
 
     def yield_border(self):
         """Yield (line, char) coords and ui icon types for the viewport's border on the screen.

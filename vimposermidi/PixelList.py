@@ -1,6 +1,7 @@
 from vimposermidi.Pixel import Pixel
 from vimposermidi.PixelData import PixelData
-from config.calculate_background_icon import calculate_background_icon
+from config.Background import is_measure_start, calculate_background_icon
+from vimposermidi.BackgroundPixelManager import BackgroundPixelManager
 
 class PixelList:
     """Store the Pixels that represent each (p,x) location
@@ -9,10 +10,12 @@ class PixelList:
     pixels -- a map of (p,x) pairs to Pixel objects
     """
     pixels: dict[tuple[int, int], Pixel]
+    background_pixel_manager: BackgroundPixelManager;
 
     def __init__(self):
         """Init a PixelList with an empty pixels map"""
         self.pixels: dict[tuple[int, int], Pixel] = {}
+        self.background_pixel_manager = BackgroundPixelManager()
     
     def set_data(self, p: int, x: int, track : int, data_to_set: PixelData):
         """Give data_to_set and track to the Pixel at (p,x)
@@ -34,7 +37,11 @@ class PixelList:
             background_data = PixelData()
             background_data.set_icon(calculate_background_icon(p,x))
             background_data.set_track(-1)
-            return background_data, "background"
+            prev_x, prev_is_measure_start = self.background_pixel_manager.get_prev_data()
+            pixel_is_measure_start = is_measure_start(x, prev_x, prev_is_measure_start)
+            self.background_pixel_manager.set_prev_data(x, pixel_is_measure_start)
+            icon_type: str = "measure_start" if pixel_is_measure_start else "background"
+            return background_data, icon_type
 
         fetched_data: PixelData = self.pixels[(p,x)].get_data(current_track)
 

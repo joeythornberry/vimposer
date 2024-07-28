@@ -163,7 +163,7 @@ class MidiManager:
     def move_cursor_right(self):
         """Move the cursor to the closest note to the right, as calculated by the track midi manager."""
         p,x = self.track_midi_manager.find_cursor_right_target(self.curP(), self.curX())
-        self.move_cursor(p,x,self.curT(),self.curT())
+        self.move_cursor(p, x, self.curT(), self.curT())
 
     def shift_up(self,amount):
         """Shift the Midi viewport up by the specified amount. A negative amount will lower the viewport."""
