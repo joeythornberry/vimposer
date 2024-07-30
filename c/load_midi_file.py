@@ -6,7 +6,7 @@ def save_note(p: int, x: int, l: int, track: int):
     return 0
 
 def load_midi_file(filename: str, save_note):
-    library_name = "./libmidiloader.so"
+    library_name = "./c/libmidiloader.so"
     cdll.LoadLibrary(library_name)
     libmidiloader = CDLL(library_name)
 

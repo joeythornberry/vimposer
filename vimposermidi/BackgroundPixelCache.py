@@ -1,4 +1,4 @@
-class BackgroundPixelManager:
+class BackgroundPixelCache:
     """Cache background pixel data."""
     prev_x: int
     prev_chars_from_measure_start: int
