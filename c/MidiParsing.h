@@ -17,13 +17,14 @@ typedef struct {
 	NoteOn note_on_map[127 * sizeof(NoteOn)];
 } OngoingNotes;
 
-uint8_t quantize(uint64_t time, uint32_t division) {
-	return time / 20;
+uint32_t quantize(uint64_t time, uint16_t base_unit_of_time) {
+	return time / base_unit_of_time;
 }
 
 int parse_event(
 		MidiFile * midifile,
 		uint8_t running_status,
+		uint16_t base_unit_of_time,
 		OngoingNotes * ongoing_notes,
 		ExportFunctions * export_functions,
 		uint64_t current_time, 
@@ -40,13 +41,13 @@ int parse_event(
 		uint32_t event_length = readVariableLength(midifile);
 		for (int i = 0; i < event_length; i++) read8(midifile); // skip data
 		if (meta_event_type == 0x2F) return track_has_notes; // end of track
-		return parse_event(midifile, 0, ongoing_notes, export_functions, current_time, track_id, track_has_notes);
+		return parse_event(midifile, 0, base_unit_of_time, ongoing_notes, export_functions, current_time, track_id, track_has_notes);
 	} 
 
 	if (event_code == 0xF0) {
 		uint32_t event_length = readVariableLength(midifile);
 		for (int i = 0; i < event_length; i ++) read8(midifile); // skip data
-		return parse_event(midifile, 0, ongoing_notes, export_functions, current_time, track_id, track_has_notes);
+		return parse_event(midifile, 0, base_unit_of_time, ongoing_notes, export_functions, current_time, track_id, track_has_notes);
 	} 
 
 	uint8_t first_data_byte;
@@ -62,7 +63,7 @@ int parse_event(
 			uint8_t note_on_pitch = first_data_byte;
 			uint8_t note_on_velocity = read8(midifile);
 			NoteOn note_on;
-			note_on.start_time = quantize(current_time, 80);
+			note_on.start_time = quantize(current_time, base_unit_of_time);
 			ongoing_notes->note_on_map[note_on_pitch] = note_on;
 			track_has_notes = 1;
 			break;
@@ -71,7 +72,7 @@ int parse_event(
 			uint8_t note_off_velocity = read8(midifile);
 			NoteOn * corresponding_note_on = 
 				&ongoing_notes->note_on_map[note_off_pitch];
-			int note_length = quantize(current_time, 80) - corresponding_note_on->start_time;
+			int note_length = quantize(current_time, base_unit_of_time) - corresponding_note_on->start_time;
 			export_functions->export_note(note_off_pitch, corresponding_note_on->start_time, note_length, track_id);
 			break;
 		case 0xB0: read8(midifile); break; // VoiceControlChange 2
@@ -81,13 +82,14 @@ int parse_event(
 		case 0xD0: break; // VoiceChannelPressure 1
 	}
 
-	return parse_event(midifile, event_code, ongoing_notes, export_functions, current_time, track_id, track_has_notes);
+	return parse_event(midifile, event_code, base_unit_of_time, ongoing_notes, export_functions, current_time, track_id, track_has_notes);
 }
 
 int parse_track_chunk(
 		MidiFile * midifile,
 		uint16_t tracks_remaining,
 		uint16_t track_id,
+		uint16_t base_unit_of_time,
 		ExportFunctions * export_functions
 		) {
 
@@ -105,14 +107,14 @@ int parse_track_chunk(
 
 	OngoingNotes ongoing_notes;
 
-	uint8_t track_has_notes = parse_event(midifile, 0, &ongoing_notes, export_functions, 0, track_id, 0);
+	uint8_t track_has_notes = parse_event(midifile, 0, base_unit_of_time, &ongoing_notes, export_functions, 0, track_id, 0);
 
 	if (midifile->bytes_read - starting_bytes_read != track_length + 4 + 4) printf("UHOH: track lengths %ld and %d do not add up\n", midifile->bytes_read - starting_bytes_read, track_length + 4 + 4);
 
-	return parse_track_chunk(midifile, tracks_remaining - 1, track_id + track_has_notes, export_functions);
+	return parse_track_chunk(midifile, tracks_remaining - 1, track_id + track_has_notes, base_unit_of_time, export_functions);
 }
 
-int parse_midi_file(MidiFile * midifile, ExportFunctions * export_functions) {
+int parse_midi_file(MidiFile * midifile, ExportFunctions * export_functions, uint8_t chars_per_quarter_note) {
 
 	char MThd[4];
 	for (uint8_t i = 0; i < 4; i++) MThd[i] = read8(midifile);
@@ -124,13 +126,19 @@ int parse_midi_file(MidiFile * midifile, ExportFunctions * export_functions) {
 	uint16_t format = read16(midifile);
 	uint16_t ntrks = read16(midifile);
 	uint16_t division = read16(midifile);
+	printf("division: %d\n", division);
 
-	int is_ticks_mode = (division & (1 << 15)) != 0;
+	int is_ticks_mode = (division & (1 << 15)) == 0;
+
+	uint16_t base_unit_of_time = 1;
+
+	if (is_ticks_mode) base_unit_of_time = division / chars_per_quarter_note; // 32nd note
+	printf("base time unit: %d\n", base_unit_of_time);
 
 	// we only know how to read 6-byte headers, so toss any extra bytes
 	for (uint32_t i = header_length; i > 6; i--) read8(midifile);
 
 	if (ntrks == 0) return 0;
 
-	return parse_track_chunk(midifile, ntrks, 0, export_functions);
+	return parse_track_chunk(midifile, ntrks, 0, base_unit_of_time, export_functions);
 }

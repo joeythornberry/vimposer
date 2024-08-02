@@ -12,7 +12,7 @@
 #include "VariableLength.h"
 #include "MidiParsing.h"
 
-const char * export_midi_file(wchar_t * filename_wchar_p, void (*export_note)(uint8_t, uint32_t, uint32_t, uint8_t)) {
+const char * export_midi_file(wchar_t * filename_wchar_p, void (*export_note)(uint8_t, uint32_t, uint32_t, uint8_t), uint8_t chars_per_quarter_note) {
 
 	char * filename = wchar_t_to_const_char(filename_wchar_p);
 	printf("Parsing MIDI File: %s\n", filename);
@@ -25,7 +25,7 @@ const char * export_midi_file(wchar_t * filename_wchar_p, void (*export_note)(ui
 	ExportFunctions export_functions;
 	export_functions.export_note = export_note;
 
-	parse_midi_file(&midifile, &export_functions);
+	parse_midi_file(&midifile, &export_functions, chars_per_quarter_note);
 
 	fclose(midifile.fp);
 
