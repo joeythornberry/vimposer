@@ -1,14 +1,11 @@
-from collections.abc import Callable
-
 from config.DefaultFrontend import Frontend 
-from vimposercore.VimposerAPI import VimposerAPI
-
-from vimposermidi.MidiViewport import MidiViewport
 from config import config
+from vimposercore.VimposerAPI import VimposerAPI
+from vimposermidi.MidiViewport import MidiViewport
+from sys import argv
 
 from vimposerparsing.open_midi_file import open_midi_file
 
-from sys import argv
 v = VimposerAPI(Frontend(), MidiViewport())
 
 config.init(v)
