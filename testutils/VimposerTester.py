@@ -1,5 +1,5 @@
-from tests.MockFrontend import MockFrontend
-from tests.MockMidiViewport import MockMidiViewport
+from testutils.MockFrontend import MockFrontend
+from testutils.MockMidiViewport import MockMidiViewport
 from vimposercore.VimposerAPI import VimposerAPI
 from vimposermidi.TrackMidiManager import TrackMidiManager
 

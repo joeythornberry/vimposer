@@ -21,8 +21,9 @@ class MidiManager:
     def __init__(self, frontend: VimposerFrontend, midi_viewport: MidiViewport):
         """Init a MidiManager with default track and the given frontend."""
         self.num_colors = frontend.load_colors()
-        terminal_size = get_terminal_size()
-        midi_viewport.set_dimensions(0, terminal_size.lines-1, 0, terminal_size.columns-2)
+        if not midi_viewport.height: # we only want to match terminal size if this isn't being run as a test
+            terminal_size = get_terminal_size()
+            midi_viewport.set_dimensions(0, terminal_size.lines-1, 0, terminal_size.columns-2)
         midi_viewport.shift_up(40)
         p = PixelList()
         self.track_midi_manager = TrackMidiManager(self.num_colors)
