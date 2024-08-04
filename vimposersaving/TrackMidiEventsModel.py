@@ -67,7 +67,19 @@ class TrackMidiEventsModel:
 
     
     def write(self, file: BufferedWriter, ticks_per_char):
+        for byte in "MTrk":
+            write_8(file, ord(byte))
         for x, event_chord in self.event_chords.items():
             time = x * ticks_per_char
             write_variable_length_number(file, time)
+
+            for note_off in event_chord.note_offs:
+                write_8(file, 0x90) # note_off code i think
+                write_8(file, note_off.p) 
+                write_8(file, 0) # velocity
+
+            for note_on in event_chord.note_ons:
+                write_8(file, 0x80) # note_on code i think
+                write_8(file, note_on.p) 
+                write_8(file, 100) # velocity
 
