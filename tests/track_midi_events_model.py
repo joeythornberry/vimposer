@@ -1,3 +1,4 @@
+from io import BufferedReader
 from vimposercore.VimposerAPI import VimposerAPI
 from vimposerparsing.open_midi_file import open_midi_file
 from testutils.VimposerTester import VimposerTester
@@ -31,10 +32,27 @@ for p, x, l in v.midi_manager.track_midi_manager.get_track_notes_list(0):
 with open("test.txt", "wb") as midifile:
     model.write(midifile, ticks_per_char)
 
+def read_8(file: BufferedReader):
+    return int.from_bytes(file.read(1))
+
 with open("test.txt", "rb") as midifile:
-    for i in range(7):
+    for byte in "MTrk":
+        c = read_8(midifile)
+        assert c == ord(byte)
+
+    varlen_num = read_variable_length_number(midifile)
+    read_8(midifile)
+    read_8(midifile)
+    read_8(midifile)
+    for i in range(1,7):
         varlen_num = read_variable_length_number(midifile)
-        print(f"delta {i}: {varlen_num}")
+        print(varlen_num)
+        read_8(midifile)
+        read_8(midifile)
+        read_8(midifile)
+        read_8(midifile)
+        read_8(midifile)
+        read_8(midifile)
 
 #tester.assert_note_exists(60, 0, 6, 0)
 tester.assert_note_exists(50, 0, 12, 0)
