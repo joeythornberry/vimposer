@@ -12,7 +12,7 @@
 #include "VariableLength.h"
 #include "MidiParsing.h"
 
-const char * export_midi_file(wchar_t * filename_wchar_p, void (*export_note)(uint8_t, uint32_t, uint32_t, uint8_t), uint8_t chars_per_quarter_note) {
+int export_midi_file(wchar_t * filename_wchar_p, void (*export_note)(uint8_t, uint32_t, uint32_t, uint8_t), uint8_t chars_per_quarter_note) {
 
 	char * filename = wchar_t_to_const_char(filename_wchar_p);
 	printf("Parsing MIDI File: %s\n", filename);
@@ -20,17 +20,18 @@ const char * export_midi_file(wchar_t * filename_wchar_p, void (*export_note)(ui
 	MidiFile midifile;
 	midifile.bytes_read = 0;
 	midifile.fp = fopen(filename, "rb");
-	if (midifile.fp == NULL) return "Failed to open file.";
+	if (midifile.fp == NULL) return -1;
 
 	ExportFunctions export_functions;
 	export_functions.export_note = export_note;
 
-	parse_midi_file(&midifile, &export_functions, chars_per_quarter_note);
+	int ticks_per_char = parse_midi_file(&midifile, &export_functions, chars_per_quarter_note);
 
 	fclose(midifile.fp);
 
 	free(filename);
-	return "Midi parse successful.";
+
+	return ticks_per_char;
 }
 
 void dummy_save_note(uint8_t p, uint8_t x, uint8_t l, uint8_t t) {
