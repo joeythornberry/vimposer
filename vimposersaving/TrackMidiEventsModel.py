@@ -1,5 +1,7 @@
+from io import BufferedReader, BufferedWriter
 from vimposermidi.Note import Note
 from vimposermidi.TrackMidi import TrackMidi
+import struct
 
 class NoteOnEvent:
     p: int
@@ -62,3 +64,13 @@ class TrackMidiEventsModel:
 
         return True, ""
 
+    
+    def write(self, file: BufferedWriter, ticks_per_char):
+        for x, event_chord in self.event_chords.items():
+            time = struct.pack('L', x * ticks_per_char)
+            time = (1 << 7)
+            file.write(time.to_bytes())
+
+def write_variable_length_number(file: BufferedWriter, num: int):
+    b = (1 << 7)
+    file.write(b.to_bytes())

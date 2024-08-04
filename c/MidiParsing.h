@@ -138,7 +138,9 @@ int parse_midi_file(MidiFile * midifile, ExportFunctions * export_functions, uin
 	// we only know how to read 6-byte headers, so toss any extra bytes
 	for (uint32_t i = header_length; i > 6; i--) read8(midifile);
 
-	if (ntrks == 0) return 0;
+	if (ntrks == 0) return -1;
 
-	return parse_track_chunk(midifile, ntrks, 0, base_unit_of_time, export_functions);
+	parse_track_chunk(midifile, ntrks, 0, base_unit_of_time, export_functions);
+
+	return base_unit_of_time;
 }
