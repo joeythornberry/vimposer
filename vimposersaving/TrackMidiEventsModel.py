@@ -32,14 +32,17 @@ class TrackMidiEventsModel:
     """Represent a track of MIDI notes as a stream of events, for saving in a MIDI file."""
 
     event_chords: dict[int, EventChord]
+    track_length: int
 
     def __init__(self, track: TrackMidi):
         self.event_chords = {}
+        self.track_length = 0
         for p, x, l in track.get_notes_list():
             self.record_note(p, x, l)
 
     def record_note(self, p: int, x: int, l: int):
         """Internally record a note as its On and Off event components."""
+
 
         if x not in self.event_chords:
             self.event_chords[x] = EventChord()
@@ -67,19 +70,40 @@ class TrackMidiEventsModel:
 
     
     def write(self, file: BufferedWriter, ticks_per_char):
+
+        write_counter = WriteCounter()
+
         for byte in "MTrk":
-            write_8(file, ord(byte))
+            write_8(file, ord(byte), write_counter)
+        # remember where the track length is stored so we can go back and set it to the correct value
+        length_position = file.tell()
+        print("lenpos:",length_position)
+        write_16(file, 0, write_counter) # put a placeholder length in for now
+
+        write_counter.reset()
+
         for x, event_chord in self.event_chords.items():
             time = x * ticks_per_char
-            write_variable_length_number(file, time)
+            write_variable_length_number(file, time, write_counter)
 
             for note_off in event_chord.note_offs:
-                write_8(file, 0x90) # note_off code i think
-                write_8(file, note_off.p) 
-                write_8(file, 0) # velocity
+                write_8(file, 0x90, write_counter) # note_off code i think
+                write_8(file, note_off.p, write_counter) 
+                write_8(file, 0, write_counter) # velocity
 
             for note_on in event_chord.note_ons:
-                write_8(file, 0x80) # note_on code i think
-                write_8(file, note_on.p) 
-                write_8(file, 100) # velocity
+                write_8(file, 0x80, write_counter) # note_on code i think
+                write_8(file, note_on.p, write_counter) 
+                write_8(file, 100, write_counter) # velocity
+
+        # end-of-track meta event
+        write_8(file, 0xff, write_counter)
+        write_8(file, 0x2f, write_counter)
+        write_8(file, 0x00, write_counter)
+
+        # go back and set the track length to the correct value
+        file.seek(length_position, 0) 
+        write_16(file, write_counter.num_writes, write_counter)
+
+        file.seek(0, 2) # return the cursor to the end of the file
 
