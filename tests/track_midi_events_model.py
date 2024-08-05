@@ -35,10 +35,16 @@ with open("test.txt", "wb") as midifile:
 def read_8(file: BufferedReader):
     return int.from_bytes(file.read(1))
 
+def read_16(file: BufferedReader):
+    return int.from_bytes(file.read(2))
+
 with open("test.txt", "rb") as midifile:
     for byte in "MTrk":
         c = read_8(midifile)
         assert c == ord(byte)
+            
+    length = read_16(midifile)
+    print("len:",length)
 
     varlen_num = read_variable_length_number(midifile)
     read_8(midifile)
