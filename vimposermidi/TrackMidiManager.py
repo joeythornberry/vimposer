@@ -123,3 +123,7 @@ class TrackMidiManager:
     def get_track_color(self, track: int) -> int:
         """Return the color id that the given track should have."""
         return self.track_color_manager.get_track_color(track)
+
+    def get_tracks_list(self) -> list[TrackMidi]:
+        """Return a list of this TrackMidiManager's tracks."""
+        return list(self.tracks.values())
