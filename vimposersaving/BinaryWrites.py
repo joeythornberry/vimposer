@@ -66,3 +66,4 @@ def write_16(file: BufferedWriter, int16: int, write_counter: WriteCounter):
     file.write(((int16 & 0xff00) >> 8).to_bytes())
     file.write((int16 & 0xff).to_bytes())
     write_counter.count_writes(2, "added 2 bytes for write_16")
+

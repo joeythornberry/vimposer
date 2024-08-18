@@ -70,6 +70,7 @@ class TrackMidiEventsModel:
 
     
     def write(self, file: BufferedWriter, ticks_per_char):
+        """Write the contents of the model to the given stream, at the given ticks_per_char."""
 
         write_counter = WriteCounter()
 
@@ -77,33 +78,51 @@ class TrackMidiEventsModel:
             write_8(file, ord(byte), write_counter)
         # remember where the track length is stored so we can go back and set it to the correct value
         length_position = file.tell()
-        print("lenpos:",length_position)
+
+        write_16(file, 0, write_counter)
         write_16(file, 0, write_counter) # put a placeholder length in for now
 
         write_counter.reset()
 
+        NOTE_ON = 0x90
+        NOTE_OFF = 0x80
+
+        running_status = 0
+
+        last_absolute_time = 0
         for x, event_chord in self.event_chords.items():
-            time = x * ticks_per_char
-            write_variable_length_number(file, time, write_counter)
+            absolute_time = x * ticks_per_char
+            delta_time = absolute_time - last_absolute_time
+            last_absolute_time = absolute_time
 
             for note_off in event_chord.note_offs:
-                write_8(file, 0x90, write_counter) # note_off code i think
+                write_variable_length_number(file, delta_time, write_counter)
+                delta_time = 0
+                if not running_status == NOTE_OFF:
+                    write_8(file, NOTE_OFF, write_counter) # note_off code i think
+                    running_status = NOTE_OFF
                 write_8(file, note_off.p, write_counter) 
                 write_8(file, 0, write_counter) # velocity
 
             for note_on in event_chord.note_ons:
-                write_8(file, 0x80, write_counter) # note_on code i think
+                write_variable_length_number(file, delta_time, write_counter)
+                delta_time = 0
+                if not running_status == NOTE_ON:
+                    write_8(file, NOTE_ON, write_counter) # note_on code i think
+                    running_status = NOTE_ON
                 write_8(file, note_on.p, write_counter) 
                 write_8(file, 100, write_counter) # velocity
 
         # end-of-track meta event
+        write_8(file, 0x00, write_counter)
         write_8(file, 0xff, write_counter)
         write_8(file, 0x2f, write_counter)
         write_8(file, 0x00, write_counter)
 
         # go back and set the track length to the correct value
         file.seek(length_position, 0) 
-        write_16(file, write_counter.num_writes, write_counter)
+        write_16(file, 0, write_counter)
+        write_16(file, write_counter.num_writes - 2, write_counter) # ignore the two previous bytes we just wrote lolol
 
-        file.seek(0, 2) # return the cursor to the end of the file
+        file.seek(1, 2) # return the cursor to the end of the file
 
