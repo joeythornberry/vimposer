@@ -69,10 +69,10 @@ class TrackMidiEventsModel:
         return True, ""
 
     
-    def write(self, file: BufferedWriter, ticks_per_char):
+    def write(self, file: BufferedWriter, ticks_per_char, write_counter: WriteCounter):
         """Write the contents of the model to the given stream, at the given ticks_per_char."""
 
-        write_counter = WriteCounter()
+        dummy_write_counter = WriteCounter() # use this when you don't want to count bytes
 
         for byte in "MTrk":
             write_8(file, ord(byte), write_counter)
@@ -82,10 +82,10 @@ class TrackMidiEventsModel:
         write_16(file, 0, write_counter)
         write_16(file, 0, write_counter) # put a placeholder length in for now
 
-        write_counter.reset()
-
-        NOTE_ON = 0x90
+        NOTE_ON = 0x90 # The second nibble is the channel number
         NOTE_OFF = 0x80
+
+        starting_num_writes = write_counter.num_writes # Track Length does NOT include track header length, so we set this after writing the track header
 
         running_status = 0
 
@@ -99,7 +99,7 @@ class TrackMidiEventsModel:
                 write_variable_length_number(file, delta_time, write_counter)
                 delta_time = 0
                 if not running_status == NOTE_OFF:
-                    write_8(file, NOTE_OFF, write_counter) # note_off code i think
+                    write_8(file, NOTE_OFF, write_counter)
                     running_status = NOTE_OFF
                 write_8(file, note_off.p, write_counter) 
                 write_8(file, 0, write_counter) # velocity
@@ -108,7 +108,7 @@ class TrackMidiEventsModel:
                 write_variable_length_number(file, delta_time, write_counter)
                 delta_time = 0
                 if not running_status == NOTE_ON:
-                    write_8(file, NOTE_ON, write_counter) # note_on code i think
+                    write_8(file, NOTE_ON, write_counter)
                     running_status = NOTE_ON
                 write_8(file, note_on.p, write_counter) 
                 write_8(file, 100, write_counter) # velocity
@@ -121,8 +121,8 @@ class TrackMidiEventsModel:
 
         # go back and set the track length to the correct value
         file.seek(length_position, 0) 
-        write_16(file, 0, write_counter)
-        write_16(file, write_counter.num_writes - 2, write_counter) # ignore the two previous bytes we just wrote lolol
+        write_16(file, 0, dummy_write_counter) # use the dummy counter because we're just rewriting existing bytes
+        write_16(file, write_counter.num_writes - starting_num_writes, dummy_write_counter) 
 
-        file.seek(1, 2) # return the cursor to the end of the file
+        file.seek(0, 2) # return the cursor to the end of the file
 
