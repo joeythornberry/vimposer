@@ -29,4 +29,6 @@ def save_midi_file(filename: str, track_midi_manager: TrackMidiManager):
 
         for track in tracks:
             track_midi_events_model = TrackMidiEventsModel(track)
-            track_midi_events_model.write(midifile, TICKS_PER_CHAR)
+            track_midi_events_model.write(midifile, TICKS_PER_CHAR, write_counter)
+        
+        print("num_writes:",write_counter.num_writes)
