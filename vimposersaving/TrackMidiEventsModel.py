@@ -90,7 +90,7 @@ class TrackMidiEventsModel:
         running_status = 0
 
         last_absolute_time = 0
-        for x, event_chord in self.event_chords.items():
+        for x, event_chord in sorted(self.event_chords.items()):
             absolute_time = x * ticks_per_char
             delta_time = absolute_time - last_absolute_time
             last_absolute_time = absolute_time

@@ -1,12 +1,20 @@
-from VimposerAPI import VimposerAPI
-import time
-import init
+from config.DefaultFrontend import Frontend 
+from config import config
+from vimposercore.VimposerAPI import VimposerAPI
+from vimposermidi.MidiViewport import MidiViewport
+from sys import argv
 
-v = VimposerAPI()
-init.init(v)
-v.km.listen(v.s.s.f.s.getkey)
+from vimposerparsing.open_midi_file import open_midi_file
 
-v.s.s.f.close()
-time.sleep(0.001)
-print(v.s.trax.tracks)
+if len(argv) < 2:
+    print("Usage: pose <midi file>")
+    quit()
 
+v = VimposerAPI(Frontend(), MidiViewport())
+
+config.init(v)
+
+open_midi_file(f"{argv[1]}", v.save_note, v.get_chars_per_quarter_note())
+
+v.km.listen(v.midi_manager.midi_window.frontend.s.getkey)
+v.midi_manager.midi_window.frontend.close()

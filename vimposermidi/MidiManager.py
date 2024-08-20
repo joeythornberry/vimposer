@@ -6,6 +6,7 @@ from vimposermidi.TrackMidiManager import TrackMidiManager
 from vimposermidi.MidiViewport import MidiViewport
 from vimposermidi.Cursor import Cursor
 from vimposermidi.VimposerFrontend import VimposerFrontend
+from vimposersaving.save_midi_file import save_midi_file
 
 class MidiManager:
     """Edit and paint to screen MIDI notes.
@@ -21,7 +22,7 @@ class MidiManager:
     def __init__(self, frontend: VimposerFrontend, midi_viewport: MidiViewport):
         """Init a MidiManager with default track and the given frontend."""
         self.num_colors = frontend.load_colors()
-        if not midi_viewport.height: # we only want to match terminal size if this isn't being run as a test
+        if not hasattr(midi_viewport, "height"): # we only want to match terminal size if this isn't being run as a test
             terminal_size = get_terminal_size()
             midi_viewport.set_dimensions(0, terminal_size.lines-1, 0, terminal_size.columns-2)
         midi_viewport.shift_up(40)
@@ -29,6 +30,9 @@ class MidiManager:
         self.track_midi_manager = TrackMidiManager(self.num_colors)
         self.midi_window = MidiWindow(midi_viewport, frontend, p, self.track_midi_manager.get_track_color)
         self.cursor = Cursor(-1,-1)
+
+    def save(self):
+        save_midi_file("output.mid", self.track_midi_manager)
 
     def curP(self) -> int:
         """Return the pitch of the cursored note."""
