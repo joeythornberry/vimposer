@@ -6,9 +6,22 @@ from vimposermidi.MidiManager import MidiManager
 class VimposerAPI:
     km : KeyboardManager
     midi_manager : MidiManager
+    chars_per_quarter_note: int
+
+    def set_chars_per_quarter_note(self, new: int):
+        self.chars_per_quarter_note = new
+
+    def get_chars_per_quarter_note(self):
+        return self.chars_per_quarter_note
 
     def send_keys(self,msg):
         pass
+
+    def save_note(self, p: int, x: int, l: int, track: int):
+        if len(self.midi_manager.track_midi_manager.tracks) <= track:
+            self.create_track(p, x, l)
+        else:
+            self.midi_manager.new_note(p, x, l, track, False)
 
     def __init__(self, frontend: VimposerFrontend, midi_viewport: MidiViewport):
         self.km = KeyboardManager(self.send_keys)
@@ -16,6 +29,9 @@ class VimposerAPI:
 
     def sound(self):
         print("we are here")
+
+    def save(self):
+        self.midi_manager.save()
 
     def make_note_right(self):
         self.midi_manager.new_note_from_cursor(self.midi_manager.curP(),self.midi_manager.curX() + self.midi_manager.curL())

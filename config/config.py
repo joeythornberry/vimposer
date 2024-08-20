@@ -1,6 +1,8 @@
 from vimposercore.VimposerAPI import VimposerAPI
 
 def init(v: VimposerAPI):
+    v.set_chars_per_quarter_note(12)
+
     v.km.map("F",v.make_note_right)
     v.km.map("A",v.make_note_left)
     v.km.map("S",v.make_note_down)
@@ -30,4 +32,6 @@ def init(v: VimposerAPI):
 
     v.km.map("i", lambda : v.shorten_cursor_note(1))
     v.km.map("o", lambda : v.lengthen_cursor_note(1))
+
+    v.km.map("W", v.save)
 
