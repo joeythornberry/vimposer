@@ -1,10 +1,11 @@
 class KeyboardManager:
 
-    def __init__(self, display_keys = lambda msg: msg):
+    def __init__(self, after_action_hook, display_keys = lambda msg: msg):
         self.prefix = ""
         self.keys = ""
         self.maps = {}
         self.display_keys = display_keys
+        self.after_action_hook = after_action_hook
         self.getch = None
 
     def clear(self):
@@ -33,6 +34,7 @@ class KeyboardManager:
                 times = int(self.prefix) if self.prefix != "" else 1
                 for i in range(times):
                     self.maps[self.keys]()
+                    self.after_action_hook()
                 self.keys = ""
                 self.prefix = ""
 

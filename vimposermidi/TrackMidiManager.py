@@ -18,6 +18,10 @@ class TrackMidiManager:
     def __repr__(self):
         return str(self.tracks)
 
+    def generate_console_string(self) -> str:
+        """Return a helpful string of track information to be shown on the console."""
+        return f"Track {self.current_track}"
+
     def has_note(self, p: int, x: int, l: int, track: int) -> bool:
         """Return True if the given track contains a note of the given p, x, and l."""
         if track not in self.tracks:

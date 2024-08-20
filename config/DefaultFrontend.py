@@ -126,3 +126,11 @@ class Frontend(VimposerFrontend):
     def close(self):
         curses.endwin()
         curses.echo()
+
+    def write_console(self, lines: list[str], screen_width: int):
+        for (y,line) in enumerate(lines):
+            self.s.attron(curses.color_pair(self.colors[2].f))
+            self.s.move(y, 0)
+            self.s.addstr(str.join("",[" " for _ in range(screen_width)]))
+            self.s.move(y, 1)
+            self.s.addstr(line)

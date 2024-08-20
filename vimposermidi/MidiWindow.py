@@ -27,6 +27,9 @@ class MidiWindow:
         self.refresh_full_screen(0)
         self.draw_window_border()
 
+    def write_console(self, lines: list[str], screen_width: int):
+        self.frontend.write_console(lines, screen_width)
+
     def get_locations(self, note_data: NoteData) -> list[Location]:
         """Translate a NoteData object into the Locations it contains."""
         return [Location(note_data.p, note_data.x+i) for i in range(note_data.l)]

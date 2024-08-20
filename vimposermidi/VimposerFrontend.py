@@ -26,3 +26,8 @@ class VimposerFrontend(metaclass=ABCMeta):
     def close(self):
         """Tear down anything the frontend set up before closing it."""
         pass
+
+    @abstractmethod
+    def write_console(self, lines: list[str], screen_width: int):
+        """Write the given strings to the top of the screen."""
+        pass
