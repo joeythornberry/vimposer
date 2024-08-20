@@ -23,9 +23,12 @@ class VimposerAPI:
         else:
             self.midi_manager.new_note(p, x, l, track, False)
 
+    def after_action_hook(self):
+        self.midi_manager.write_console()
+
     def __init__(self, frontend: VimposerFrontend, midi_viewport: MidiViewport):
-        self.km = KeyboardManager(self.send_keys)
-        self.midi_manager = MidiManager(frontend, midi_viewport)
+        self.km = KeyboardManager(self.after_action_hook, self.send_keys)
+        self.midi_manager = MidiManager(frontend, midi_viewport, 2)
 
     def sound(self):
         print("we are here")
