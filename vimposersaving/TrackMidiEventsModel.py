@@ -1,6 +1,7 @@
 from io import BufferedReader, BufferedWriter
 from vimposermidi.Note import Note
 from vimposermidi.TrackMidi import TrackMidi
+from vimposermidi.tempo_conversions import bpm_to_mpq
 from vimposersaving.BinaryWrites import *
 import struct
 
@@ -37,6 +38,7 @@ class TrackMidiEventsModel:
     instrument: int
 
     def __init__(self, track: TrackMidi, channel: int):
+        self.tempo = None
         self.channel = channel
         self.velocity = track.velocity
         self.instrument = track.instrument
@@ -74,6 +76,8 @@ class TrackMidiEventsModel:
 
         return True, ""
 
+    def set_tempo(self, tempo):
+        self.tempo = bpm_to_mpq(tempo)
     
     def write(self, file: BufferedWriter, ticks_per_char, write_counter: WriteCounter):
         """Write the contents of the model to the given stream, at the given ticks_per_char."""
@@ -88,6 +92,7 @@ class TrackMidiEventsModel:
         write_16(file, 0, write_counter)
         write_16(file, 0, write_counter) # put a placeholder length in for now
 
+        SET_TEMPO = 0x51
         # event codes that affect channels are 1-nibble codes with 1-nibble channel ids attached
         NOTE_ON = 0x90 | self.channel
         NOTE_OFF = 0x80 | self.channel
@@ -98,6 +103,16 @@ class TrackMidiEventsModel:
         running_status = 0
 
         last_absolute_time = 0
+
+
+        if self.tempo != None:
+            write_variable_length_number(file, 0, write_counter)
+            write_8(file, 0xff, write_counter) # meta-event code
+            write_8(file, SET_TEMPO, write_counter)
+            write_variable_length_number(file, 3, write_counter)
+            write_8(file, (self.tempo >> 16) & 0xff, write_counter)
+            write_8(file, (self.tempo >> 8) & 0xff, write_counter)
+            write_8(file, self.tempo & 0xff, write_counter)
 
         write_variable_length_number(file, 0, write_counter)
         write_8(file, PROGRAM_CHANGE, write_counter)

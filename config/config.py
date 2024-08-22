@@ -42,3 +42,6 @@ def init(v: VimposerAPI):
     v.km.map("Ij", lambda : v.set_current_track_instrument(v.midi_manager.track_midi_manager.tracks[v.midi_manager.curT()].instrument - 1))
     v.km.map("Ik", lambda : v.set_current_track_instrument(v.midi_manager.track_midi_manager.tracks[v.midi_manager.curT()].instrument + 1))
 
+    v.km.map("Tj", lambda : v.set_tempo(v.midi_manager.tempo - 1))
+    v.km.map("Tk", lambda : v.set_tempo(v.midi_manager.tempo + 1))
+

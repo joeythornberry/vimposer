@@ -25,11 +25,6 @@ int export_midi_file(wchar_t * filename_wchar_p, void (*export_note)(uint8_t, ui
 	midifile.fp = fopen(filename, "rb");
 	if (midifile.fp == NULL) return -1;
 
-	printf("EXPORTING NOTE\n");
-	export_note(1,1,1,1,1,1);
-	printf("EXPORTING TEMPO\n");
-	export_tempo(4000);
-
 	ExportFunctions export_functions;
 	export_functions.export_note = export_note;
 	export_functions.export_tempo = export_tempo;

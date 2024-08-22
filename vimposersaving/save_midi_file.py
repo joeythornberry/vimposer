@@ -2,7 +2,7 @@ from vimposermidi.TrackMidiManager import TrackMidiManager
 from vimposersaving.TrackMidiEventsModel import TrackMidiEventsModel
 from vimposersaving.BinaryWrites import *
 
-def save_midi_file(filename: str, track_midi_manager: TrackMidiManager):
+def save_midi_file(filename: str, track_midi_manager: TrackMidiManager, tempo: int):
 
     TICKS_PER_CHAR = 40
     CHARS_PER_QUARTER_NOTE = 12
@@ -29,4 +29,8 @@ def save_midi_file(filename: str, track_midi_manager: TrackMidiManager):
 
         for (trackid, track) in enumerate(tracks):
             track_midi_events_model = TrackMidiEventsModel(track, trackid)
+
+            if trackid == 0:
+                track_midi_events_model.set_tempo(tempo)
+
             track_midi_events_model.write(midifile, TICKS_PER_CHAR, write_counter)

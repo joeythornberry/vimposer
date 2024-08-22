@@ -2,6 +2,7 @@ from vimposercore.KeyboardManager import KeyboardManager
 from vimposermidi.MidiViewport import MidiViewport
 from vimposermidi.VimposerFrontend import VimposerFrontend
 from vimposermidi.MidiManager import MidiManager
+from vimposermidi.tempo_conversions import mpq_to_bpm
 
 class VimposerAPI:
     km : KeyboardManager
@@ -24,7 +25,7 @@ class VimposerAPI:
             self.midi_manager.new_note(p, x, l, track, False)
 
     def save_tempo(self, new_tempo: int):
-        self.midi_manager.tempo = new_tempo
+        self.midi_manager.tempo = mpq_to_bpm(new_tempo)
 
     def after_action_hook(self):
         self.midi_manager.write_console()
@@ -32,6 +33,10 @@ class VimposerAPI:
     def __init__(self, frontend: VimposerFrontend, midi_viewport: MidiViewport):
         self.km = KeyboardManager(self.after_action_hook, self.send_keys)
         self.midi_manager = MidiManager(frontend, midi_viewport, 2)
+
+    def set_tempo(self, new_tempo):
+        if new_tempo > 0:
+            self.midi_manager.tempo = new_tempo
 
     def set_current_track_velocity(self, new_velocity):
         self.midi_manager.track_midi_manager.set_current_track_velocity(new_velocity)
