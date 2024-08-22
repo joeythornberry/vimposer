@@ -22,6 +22,7 @@ class MidiManager:
     tempo: int
     filename: str
     console: Console
+    in_progress_keys: str
 
     def __init__(self, frontend: VimposerFrontend, midi_viewport: MidiViewport, console_height: int, filename: str):
         """Init a MidiManager with default track and the given frontend."""
@@ -38,6 +39,7 @@ class MidiManager:
         self.tempo = 120 # this is the default value if not explicitly set
         self.filename = filename
         self.console = Console(console_height)
+        self.in_progress_keys = ""
 
     def write_console(self):
         """Tell frontend to write helpful information to the console."""
@@ -45,7 +47,7 @@ class MidiManager:
         manager_string = f"Vimposer {self.filename}. Tempo: {self.tempo}"
         track_string = self.track_midi_manager.generate_console_string()
         longest_length = max(len(manager_string), len(track_string))
-        manager_string += "".join([" " for _ in range(longest_length + padding - len(manager_string))]) + self.console.lines[0]
+        manager_string += "".join([" " for _ in range(longest_length + padding - len(manager_string))]) + self.console.lines[0] + "     " + self.in_progress_keys
         track_string += "".join([" " for _ in range(longest_length + padding - len(track_string))]) + self.console.lines[1]
         lines = [
                 manager_string,

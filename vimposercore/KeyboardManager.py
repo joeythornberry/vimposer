@@ -42,7 +42,7 @@ class KeyboardManager:
                 pass
 
             finally:
-                pass
+                self.display_keys(self.prefix + self.keys)
 
     def map(self, keypresses, function):
 

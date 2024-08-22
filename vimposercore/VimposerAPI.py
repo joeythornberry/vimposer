@@ -16,7 +16,8 @@ class VimposerAPI:
         return self.chars_per_quarter_note
 
     def send_keys(self,msg):
-        pass
+        self.midi_manager.in_progress_keys = msg
+        self.midi_manager.write_console()
 
     def save_note(self, p: int, x: int, l: int, track: int, velocity: int, instrument: int):
         if len(self.midi_manager.track_midi_manager.tracks) <= track:
