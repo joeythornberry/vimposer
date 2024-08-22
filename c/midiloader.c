@@ -12,18 +12,27 @@
 #include "VariableLength.h"
 #include "MidiParsing.h"
 
-int export_midi_file(wchar_t * filename_wchar_p, void (*export_note)(uint8_t, uint32_t, uint32_t, uint8_t, uint8_t, uint8_t), uint8_t chars_per_quarter_note) {
+void dummy_save_tempo(uint32_t new_tempo) {
+	printf("saving tempo: %d\n", new_tempo);
+}
+
+int export_midi_file(wchar_t * filename_wchar_p, void (*export_note)(uint8_t, uint32_t, uint32_t, uint8_t, uint8_t, uint8_t), void (*export_tempo)(uint32_t), uint8_t chars_per_quarter_note) {
 
 	char * filename = wchar_t_to_const_char(filename_wchar_p);
-	printf("Parsing MIDI File: %s\n", filename);
 
 	MidiFile midifile;
 	midifile.bytes_read = 0;
 	midifile.fp = fopen(filename, "rb");
 	if (midifile.fp == NULL) return -1;
 
+	printf("EXPORTING NOTE\n");
+	export_note(1,1,1,1,1,1);
+	printf("EXPORTING TEMPO\n");
+	export_tempo(4000);
+
 	ExportFunctions export_functions;
 	export_functions.export_note = export_note;
+	export_functions.export_tempo = export_tempo;
 
 	int ticks_per_char = parse_midi_file(&midifile, &export_functions, chars_per_quarter_note);
 
@@ -37,7 +46,6 @@ int export_midi_file(wchar_t * filename_wchar_p, void (*export_note)(uint8_t, ui
 void dummy_save_note(uint8_t p, uint8_t x, uint8_t l, uint8_t t, uint8_t v, uint8_t instrument) {
 	printf("saving note: p=%d x=%d l=%d t=%d\n", p, x, l, t);
 }
-
 
 int main() {
 	wchar_t * filename = L"../MIDI/d_minor_scale.mid";

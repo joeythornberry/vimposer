@@ -23,6 +23,9 @@ class VimposerAPI:
         else:
             self.midi_manager.new_note(p, x, l, track, False)
 
+    def save_tempo(self, new_tempo: int):
+        self.midi_manager.tempo = new_tempo
+
     def after_action_hook(self):
         self.midi_manager.write_console()
 

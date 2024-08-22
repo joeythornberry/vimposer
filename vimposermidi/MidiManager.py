@@ -18,6 +18,7 @@ class MidiManager:
     midi_window: MidiWindow 
     track_midi_manager: TrackMidiManager
     cursor: Cursor
+    tempo: int
 
     def __init__(self, frontend: VimposerFrontend, midi_viewport: MidiViewport, console_height: int):
         """Init a MidiManager with default track and the given frontend."""
@@ -26,16 +27,19 @@ class MidiManager:
         if not hasattr(midi_viewport, "height"): # we only want to match terminal size if this isn't being run as a test
             self.terminal_size = (get_terminal_size().lines, get_terminal_size().columns)
             midi_viewport.set_dimensions(console_height, self.terminal_size[0]-1, 0, self.terminal_size[1]-2)
-            frontend.write_console(["hello, this works", "i am midi man"], self.terminal_size[0])
         midi_viewport.shift_up(40)
         p = PixelList()
         self.track_midi_manager = TrackMidiManager(self.num_colors)
         self.midi_window = MidiWindow(midi_viewport, frontend, p, self.track_midi_manager.get_track_color)
         self.cursor = Cursor(-1,-1)
+        self.tempo = 0
 
     def write_console(self):
         """Tell frontend to write helpful information to the console."""
-        lines = ["writing", self.track_midi_manager.generate_console_string()]
+        lines = [
+                f"Vimposer. Tempo: {self.tempo}",
+                self.track_midi_manager.generate_console_string()
+            ]
         self.midi_window.write_console(lines, self.terminal_size[1])
 
     def save(self):

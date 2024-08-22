@@ -36,7 +36,8 @@ class TrackMidiEventsModel:
     velocity: int
     instrument: int
 
-    def __init__(self, track: TrackMidi):
+    def __init__(self, track: TrackMidi, channel: int):
+        self.channel = channel
         self.velocity = track.velocity
         self.instrument = track.instrument
 
@@ -87,8 +88,10 @@ class TrackMidiEventsModel:
         write_16(file, 0, write_counter)
         write_16(file, 0, write_counter) # put a placeholder length in for now
 
-        NOTE_ON = 0x90 # The second nibble is the channel number
-        NOTE_OFF = 0x80
+        # event codes that affect channels are 1-nibble codes with 1-nibble channel ids attached
+        NOTE_ON = 0x90 | self.channel
+        NOTE_OFF = 0x80 | self.channel
+        PROGRAM_CHANGE = 0xc0 | self.channel
 
         starting_num_writes = write_counter.num_writes # Track Length does NOT include track header length, so we set this after writing the track header
 
@@ -97,7 +100,7 @@ class TrackMidiEventsModel:
         last_absolute_time = 0
 
         write_variable_length_number(file, 0, write_counter)
-        write_8(file, 0xc0, write_counter)
+        write_8(file, PROGRAM_CHANGE, write_counter)
         write_8(file, self.instrument, write_counter)
 
         for x, event_chord in sorted(self.event_chords.items()):

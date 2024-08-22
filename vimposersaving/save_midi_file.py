@@ -27,6 +27,6 @@ def save_midi_file(filename: str, track_midi_manager: TrackMidiManager):
         
         assert write_counter.num_writes == 14, f"wrote incorrect number of bytes ({write_counter.num_writes}) to MIDI header.\nLog:{write_counter.log}"
 
-        for track in tracks:
-            track_midi_events_model = TrackMidiEventsModel(track)
+        for (trackid, track) in enumerate(tracks):
+            track_midi_events_model = TrackMidiEventsModel(track, trackid)
             track_midi_events_model.write(midifile, TICKS_PER_CHAR, write_counter)
