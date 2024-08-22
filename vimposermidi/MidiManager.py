@@ -185,9 +185,9 @@ class MidiManager:
         """Shift the Midi viewport to the right by the specified amount. A negative amount will shift the viewport to the left."""
         self.midi_window.shift_across(amount, self.curT())
 
-    def create_track(self, starting_note_p: int = 60, starting_note_x: int = 0, starting_note_l: int = 6):
+    def create_track(self, starting_note_p: int = 60, starting_note_x: int = 0, starting_note_l: int = 6, track_velocity: int = 100, track_instrument: int = 0):
         """Create a new track, and make it the current track."""
-        t = self.track_midi_manager.create_track()
+        t = self.track_midi_manager.create_track(track_velocity, track_instrument)
         self.track_midi_manager.add_note(starting_note_p, starting_note_x, starting_note_l, t)
         self.change_track(t)
 

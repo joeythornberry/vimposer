@@ -4,10 +4,14 @@ from vimposermidi.Note import Note
 class TrackMidi:
     """Represent a track in a Midi file."""
     chords : dict[int, Chord]
+    velocity: int
+    instrument: int
 
-    def __init__(self):
+    def __init__(self, velocity: int, instrument: int):
         """Init a Track with an empty chords dict."""
         self.chords: dict[int, Chord] = {}
+        self.velocity = velocity
+        self.instrument = instrument
 
     def __repr__(self):
         chordstring = ""

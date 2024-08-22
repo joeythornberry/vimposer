@@ -1,3 +1,4 @@
+from os import curdir
 from vimposermidi.TrackMidi import TrackMidi
 from vimposermidi.TrackColorManager import TrackColorManager
 
@@ -20,7 +21,8 @@ class TrackMidiManager:
 
     def generate_console_string(self) -> str:
         """Return a helpful string of track information to be shown on the console."""
-        return f"Track {self.current_track}"
+        cur_track = self.tracks[self.current_track]
+        return f"Track {self.current_track}, Velocity: {cur_track.velocity}, Instrument: {cur_track.instrument}"
 
     def has_note(self, p: int, x: int, l: int, track: int) -> bool:
         """Return True if the given track contains a note of the given p, x, and l."""
@@ -59,12 +61,22 @@ class TrackMidiManager:
             return all_track_ids[len(all_track_ids) - 1]
         return all_track_ids[next_current_track]
 
-    def create_track(self) -> int:
+    def create_track(self, track_velocity: int, track_instrument: int) -> int:
         """Create a new track with a unique id. Returns id of created track, if you need it."""
         self.new_track_id += 1
         self.track_color_manager.assign_track_color(self.new_track_id)
-        self.tracks[self.new_track_id] = TrackMidi()
+        self.tracks[self.new_track_id] = TrackMidi(track_velocity, track_instrument) 
         return self.new_track_id
+
+    def set_current_track_velocity(self, new_velocity: int):
+        """Set the velocity of the current track to the given value."""
+        if 0 <= new_velocity and 128 > new_velocity:
+            self.tracks[self.current_track].velocity = new_velocity
+
+    def set_current_track_instrument(self, new_instrument: int):
+        """Set the instrument of the current track to the given value."""
+        if 0 <= new_instrument and 128 > new_instrument:
+            self.tracks[self.current_track].instrument = new_instrument
 
     def delete_track(self, track: int):
         """Delete the track with the current track id."""
