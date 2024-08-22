@@ -32,7 +32,7 @@ class MidiManager:
         self.track_midi_manager = TrackMidiManager(self.num_colors)
         self.midi_window = MidiWindow(midi_viewport, frontend, p, self.track_midi_manager.get_track_color)
         self.cursor = Cursor(-1,-1)
-        self.tempo = 0
+        self.tempo = 120 # this is the default value if not explicitly set
 
     def write_console(self):
         """Tell frontend to write helpful information to the console."""
@@ -43,7 +43,7 @@ class MidiManager:
         self.midi_window.write_console(lines, self.terminal_size[1])
 
     def save(self):
-        save_midi_file("output.mid", self.track_midi_manager)
+        save_midi_file("output.mid", self.track_midi_manager, self.tempo)
 
     def curP(self) -> int:
         """Return the pitch of the cursored note."""
