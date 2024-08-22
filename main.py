@@ -10,7 +10,7 @@ if len(argv) < 2:
     print("Usage: pose <midi file>")
     quit()
 
-v = VimposerAPI(Frontend(), MidiViewport())
+v = VimposerAPI(Frontend(), MidiViewport(), argv[1])
 
 config.init(v)
 

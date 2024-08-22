@@ -30,9 +30,9 @@ class VimposerAPI:
     def after_action_hook(self):
         self.midi_manager.write_console()
 
-    def __init__(self, frontend: VimposerFrontend, midi_viewport: MidiViewport):
+    def __init__(self, frontend: VimposerFrontend, midi_viewport: MidiViewport, filename: str):
         self.km = KeyboardManager(self.after_action_hook, self.send_keys)
-        self.midi_manager = MidiManager(frontend, midi_viewport, 2)
+        self.midi_manager = MidiManager(frontend, midi_viewport, 2, filename)
 
     def set_tempo(self, new_tempo):
         if new_tempo > 0:

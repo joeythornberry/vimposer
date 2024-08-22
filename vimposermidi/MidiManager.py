@@ -19,8 +19,9 @@ class MidiManager:
     track_midi_manager: TrackMidiManager
     cursor: Cursor
     tempo: int
+    filename: str
 
-    def __init__(self, frontend: VimposerFrontend, midi_viewport: MidiViewport, console_height: int):
+    def __init__(self, frontend: VimposerFrontend, midi_viewport: MidiViewport, console_height: int, filename: str):
         """Init a MidiManager with default track and the given frontend."""
         self.num_colors = frontend.load_colors()
         self.terminal_size = (0, 0)
@@ -33,17 +34,18 @@ class MidiManager:
         self.midi_window = MidiWindow(midi_viewport, frontend, p, self.track_midi_manager.get_track_color)
         self.cursor = Cursor(-1,-1)
         self.tempo = 120 # this is the default value if not explicitly set
+        self.filename = filename
 
     def write_console(self):
         """Tell frontend to write helpful information to the console."""
         lines = [
-                f"Vimposer. Tempo: {self.tempo}",
+                f"Vimposer {self.filename}. Tempo: {self.tempo}",
                 self.track_midi_manager.generate_console_string()
             ]
         self.midi_window.write_console(lines, self.terminal_size[1])
 
     def save(self):
-        save_midi_file("output.mid", self.track_midi_manager, self.tempo)
+        save_midi_file(self.filename, self.track_midi_manager, self.tempo)
 
     def curP(self) -> int:
         """Return the pitch of the cursored note."""
