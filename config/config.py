@@ -18,10 +18,10 @@ def init(v: VimposerAPI):
     v.km.map("h",v.move_note_left)
     v.km.map("l",v.move_note_right)
 
-    v.km.map("H", lambda : v.shift_window_horizontal(-1))
-    v.km.map("L", lambda : v.shift_window_horizontal(1))
-    v.km.map("J", lambda : v.shift_window_vertical(-1))
-    v.km.map("K", lambda : v.shift_window_vertical(1))
+    v.km.map("H", lambda amount : v.shift_window_horizontal(-1 * amount))
+    v.km.map("L", lambda amount : v.shift_window_horizontal(amount))
+    v.km.map("J", lambda amount : v.shift_window_vertical(-1 * amount))
+    v.km.map("K", lambda amount : v.shift_window_vertical(amount))
 
     v.km.map("tn",v.create_track)
     v.km.map("tk",v.change_track_up)
@@ -30,18 +30,15 @@ def init(v: VimposerAPI):
 
     v.km.map("x",v.delete_cursor_note)
 
-    v.km.map("i", lambda : v.shorten_cursor_note(1))
-    v.km.map("o", lambda : v.lengthen_cursor_note(1))
+    v.km.map("i", v.shorten_cursor_note)
+    v.km.map("o", v.lengthen_cursor_note)
 
     v.km.map("W", v.save)
 
 
-    v.km.map("Vj", lambda : v.set_current_track_velocity(v.midi_manager.track_midi_manager.tracks[v.midi_manager.curT()].velocity - 1))
-    v.km.map("Vk", lambda : v.set_current_track_velocity(v.midi_manager.track_midi_manager.tracks[v.midi_manager.curT()].velocity + 1))
+    v.km.map("V", v.set_current_track_velocity)
 
-    v.km.map("Ij", lambda : v.set_current_track_instrument(v.midi_manager.track_midi_manager.tracks[v.midi_manager.curT()].instrument - 1))
-    v.km.map("Ik", lambda : v.set_current_track_instrument(v.midi_manager.track_midi_manager.tracks[v.midi_manager.curT()].instrument + 1))
+    v.km.map("I", v.set_current_track_instrument)
 
-    v.km.map("Tj", lambda : v.set_tempo(v.midi_manager.tempo - 1))
-    v.km.map("Tk", lambda : v.set_tempo(v.midi_manager.tempo + 1))
+    v.km.map("T", v.set_tempo)
 
