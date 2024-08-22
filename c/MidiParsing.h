@@ -6,11 +6,12 @@
 #include "VariableLength.h"
 
 typedef struct {
-	void (*export_note) (uint8_t, uint32_t, uint32_t, uint8_t); // p, x, l, t
+	void (*export_note) (uint8_t, uint32_t, uint32_t, uint8_t, uint8_t, uint8_t); // p, x, l, t, v, instrument
 } ExportFunctions;
 
 typedef struct {
 	uint64_t start_time;
+	uint8_t velocity;
 } NoteOn;
 
 typedef struct {
@@ -29,25 +30,29 @@ int parse_event(
 		ExportFunctions * export_functions,
 		uint64_t current_time, 
 		uint16_t track_id,
-		uint8_t track_has_notes
+		uint8_t track_has_notes, 
+		uint8_t instrument
 		) {
+
+	uint8_t new_instrument = instrument;
 	uint32_t dt = readVariableLength(midifile);
 	current_time += dt;
 
 	uint8_t event_code = read8(midifile);
+	printf("%x\n", event_code);
 
 	if (event_code == 0xFF) {
 		uint8_t meta_event_type = read8(midifile);
 		uint32_t event_length = readVariableLength(midifile);
 		for (int i = 0; i < event_length; i++) read8(midifile); // skip data
 		if (meta_event_type == 0x2F) return track_has_notes; // end of track
-		return parse_event(midifile, 0, base_unit_of_time, ongoing_notes, export_functions, current_time, track_id, track_has_notes);
+		return parse_event(midifile, 0, base_unit_of_time, ongoing_notes, export_functions, current_time, track_id, track_has_notes, instrument);
 	} 
 
 	if (event_code == 0xF0) {
 		uint32_t event_length = readVariableLength(midifile);
-		for (int i = 0; i < event_length; i ++) read8(midifile); // skip data
-		return parse_event(midifile, 0, base_unit_of_time, ongoing_notes, export_functions, current_time, track_id, track_has_notes);
+		for (int i = 0; i < event_length; i++) read8(midifile); // skip data
+		return parse_event(midifile, 0, base_unit_of_time, ongoing_notes, export_functions, current_time, track_id, track_has_notes, instrument);
 	} 
 
 	uint8_t first_data_byte;
@@ -61,11 +66,13 @@ int parse_event(
 	switch (event_code & 0xF0) {
 		case 0x90:
 			uint8_t note_on_pitch = first_data_byte;
-			uint8_t note_on_velocity = read8(midifile);
 			NoteOn note_on;
 			note_on.start_time = quantize(current_time, base_unit_of_time);
+			note_on.velocity = read8(midifile);
 			ongoing_notes->note_on_map[note_on_pitch] = note_on;
 			track_has_notes = 1;
+			NoteOn * responding_note_on = 
+				&ongoing_notes->note_on_map[note_on_pitch];
 			break;
 		case 0x80:
 			uint8_t note_off_pitch = first_data_byte;
@@ -73,16 +80,18 @@ int parse_event(
 			NoteOn * corresponding_note_on = 
 				&ongoing_notes->note_on_map[note_off_pitch];
 			int note_length = quantize(current_time, base_unit_of_time) - corresponding_note_on->start_time;
-			export_functions->export_note(note_off_pitch, corresponding_note_on->start_time, note_length, track_id);
+			export_functions->export_note(note_off_pitch, corresponding_note_on->start_time, note_length, track_id, corresponding_note_on->velocity, instrument);
 			break;
 		case 0xB0: read8(midifile); break; // VoiceControlChange 2
 		case 0xE0: read8(midifile); break; // VoicePitchBend 2
 		case 0xA0: read8(midifile); break; // VoiceAftertouch 2
-		case 0xC0: break; // VoiceProgramChange 1
+		case 0xC0: 
+			   new_instrument = first_data_byte; 
+			   break; // VoiceProgramChange 1
 		case 0xD0: break; // VoiceChannelPressure 1
 	}
 
-	return parse_event(midifile, event_code, base_unit_of_time, ongoing_notes, export_functions, current_time, track_id, track_has_notes);
+	return parse_event(midifile, event_code, base_unit_of_time, ongoing_notes, export_functions, current_time, track_id, track_has_notes, new_instrument);
 }
 
 int parse_track_chunk(
@@ -107,7 +116,9 @@ int parse_track_chunk(
 
 	OngoingNotes ongoing_notes;
 
-	uint8_t track_has_notes = parse_event(midifile, 0, base_unit_of_time, &ongoing_notes, export_functions, 0, track_id, 0);
+	uint8_t instrument = 0;
+
+	uint8_t track_has_notes = parse_event(midifile, 0, base_unit_of_time, &ongoing_notes, export_functions, 0, track_id, 0, instrument);
 
 	if (midifile->bytes_read - starting_bytes_read != track_length + 4 + 4) printf("UHOH: track lengths %ld and %d do not add up\n", midifile->bytes_read - starting_bytes_read, track_length + 4 + 4);
 

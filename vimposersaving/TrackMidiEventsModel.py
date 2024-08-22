@@ -33,8 +33,13 @@ class TrackMidiEventsModel:
 
     event_chords: dict[int, EventChord]
     track_length: int
+    velocity: int
+    instrument: int
 
     def __init__(self, track: TrackMidi):
+        self.velocity = track.velocity
+        self.instrument = track.instrument
+
         self.event_chords = {}
         self.track_length = 0
         for p, x, l in track.get_notes_list():
@@ -90,6 +95,11 @@ class TrackMidiEventsModel:
         running_status = 0
 
         last_absolute_time = 0
+
+        write_variable_length_number(file, 0, write_counter)
+        write_8(file, 0xc0, write_counter)
+        write_8(file, self.instrument, write_counter)
+
         for x, event_chord in sorted(self.event_chords.items()):
             absolute_time = x * ticks_per_char
             delta_time = absolute_time - last_absolute_time
@@ -111,7 +121,7 @@ class TrackMidiEventsModel:
                     write_8(file, NOTE_ON, write_counter)
                     running_status = NOTE_ON
                 write_8(file, note_on.p, write_counter) 
-                write_8(file, 100, write_counter) # velocity
+                write_8(file, self.velocity, write_counter) # velocity
 
         # end-of-track meta event
         write_8(file, 0x00, write_counter)

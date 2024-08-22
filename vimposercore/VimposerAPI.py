@@ -17,9 +17,9 @@ class VimposerAPI:
     def send_keys(self,msg):
         pass
 
-    def save_note(self, p: int, x: int, l: int, track: int):
+    def save_note(self, p: int, x: int, l: int, track: int, velocity: int, instrument: int):
         if len(self.midi_manager.track_midi_manager.tracks) <= track:
-            self.create_track(p, x, l)
+            self.create_track(p, x, l, velocity, instrument)
         else:
             self.midi_manager.new_note(p, x, l, track, False)
 
@@ -29,6 +29,12 @@ class VimposerAPI:
     def __init__(self, frontend: VimposerFrontend, midi_viewport: MidiViewport):
         self.km = KeyboardManager(self.after_action_hook, self.send_keys)
         self.midi_manager = MidiManager(frontend, midi_viewport, 2)
+
+    def set_current_track_velocity(self, new_velocity):
+        self.midi_manager.track_midi_manager.set_current_track_velocity(new_velocity)
+
+    def set_current_track_instrument(self, new_instrument):
+        self.midi_manager.track_midi_manager.set_current_track_instrument(new_instrument)
 
     def sound(self):
         print("we are here")
@@ -87,8 +93,8 @@ class VimposerAPI:
     def shift_window_horizontal(self,amount : int):
         self.midi_manager.shift_across(amount)
 
-    def create_track(self, starting_note_p: int = 60, starting_note_x: int = 0, starting_note_l: int = 6):
-        self.midi_manager.create_track(starting_note_p, starting_note_x, starting_note_l)
+    def create_track(self, starting_note_p: int = 60, starting_note_x: int = 0, starting_note_l: int = 6, track_velocity: int = 100, track_instrument: int = 0):
+        self.midi_manager.create_track(starting_note_p, starting_note_x, starting_note_l, track_velocity, track_instrument)
 
     def delete_current_track(self):
         self.midi_manager.delete_current_track()
