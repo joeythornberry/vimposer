@@ -134,3 +134,4 @@ class Frontend(VimposerFrontend):
             self.s.addstr(str.join("",[" " for _ in range(screen_width)]))
             self.s.move(y, 1)
             self.s.addstr(line)
+        self.s.refresh()
