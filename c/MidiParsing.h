@@ -7,6 +7,8 @@
 
 typedef struct {
 	void (*export_note) (uint8_t, uint32_t, uint32_t, uint8_t, uint8_t, uint8_t); // p, x, l, t, v, instrument
+										
+	void (*export_tempo) (uint32_t);
 } ExportFunctions;
 
 typedef struct {
@@ -44,8 +46,16 @@ int parse_event(
 	if (event_code == 0xFF) {
 		uint8_t meta_event_type = read8(midifile);
 		uint32_t event_length = readVariableLength(midifile);
-		for (int i = 0; i < event_length; i++) read8(midifile); // skip data
-		if (meta_event_type == 0x2F) return track_has_notes; // end of track
+
+		uint8_t SET_TEMPO = 0x51;
+		if (meta_event_type == SET_TEMPO && event_length == 3) {
+			uint32_t new_tempo = (read8(midifile) << 16) | (read8(midifile) << 8) | read8(midifile);
+			printf("new tempo: %d\n", new_tempo);
+			export_functions->export_tempo(new_tempo);
+		} else {
+			for (int i = 0; i < event_length; i++) read8(midifile); // skip data
+			if (meta_event_type == 0x2F) return track_has_notes; // end of track
+		}
 		return parse_event(midifile, 0, base_unit_of_time, ongoing_notes, export_functions, current_time, track_id, track_has_notes, instrument);
 	} 
 
