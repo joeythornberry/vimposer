@@ -2,7 +2,9 @@ from config.DefaultFrontend import Frontend
 from config import config
 from vimposercore.VimposerAPI import VimposerAPI
 from vimposermidi.MidiViewport import MidiViewport
+from vimposersaving.minimal import write_minimal_midi_file
 from sys import argv
+from os.path import exists
 
 from vimposerparsing.open_midi_file import open_midi_file
 
@@ -10,9 +12,15 @@ if len(argv) < 2:
     print("Usage: pose <midi file>")
     quit()
 
-v = VimposerAPI(Frontend(), MidiViewport(), argv[1])
+filename = argv[1]
+
+v = VimposerAPI(Frontend(), MidiViewport(), filename)
 
 config.init(v)
+
+
+if not exists(filename):
+    write_minimal_midi_file(filename)
 
 open_midi_file(f"{argv[1]}", v.save_note, v.save_tempo, v.get_chars_per_quarter_note())
 
