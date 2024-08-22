@@ -35,8 +35,8 @@ class MidiViewport:
 
         Can shift in negative direction, but will not set across to a negative value.
         """
-        if self.across == 0 and amount < 0:
-            return
+        if self.across + amount < 0:
+            amount = -1 * self.across
         self.across += amount
 
     def shift_up(self, amount: int):
@@ -45,8 +45,10 @@ class MidiViewport:
         Can shift in negative direction, but will not set up to a negative value, or to a value that would 
         draw a pitch location above 127 on the screen.
         """
-        if (self.up == 0 and amount < 0) or (self.up == (129-self.height) and amount > 0):
-            return
+        if self.up + amount < 0:
+            amount = -1 * self.up
+        elif self.up + amount > 129-self.height:
+            amount = 129-self.height - self.up
         self.up += amount
 
     def translate_coords(self, p: int, x: int) -> tuple[int, int, bool]:
