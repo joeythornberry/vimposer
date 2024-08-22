@@ -30,9 +30,15 @@ class VimposerAPI:
     def after_action_hook(self):
         self.midi_manager.write_console()
 
+    def log(self, msg):
+        self.midi_manager.console.log(msg)
+
     def __init__(self, frontend: VimposerFrontend, midi_viewport: MidiViewport, filename: str):
         self.km = KeyboardManager(self.after_action_hook, self.send_keys)
         self.midi_manager = MidiManager(frontend, midi_viewport, 2, filename)
+        self.log("Welcome to Vimposer.")
+        self.log("Happy Composing!")
+        
 
     def set_tempo(self, new_tempo):
         if new_tempo > 0:
@@ -48,7 +54,10 @@ class VimposerAPI:
         print("we are here")
 
     def save(self):
+        self.log("Saving...")
+        self.midi_manager.write_console()
         self.midi_manager.save()
+        self.log("Saved!")
 
     def make_note_right(self):
         self.midi_manager.new_note_from_cursor(self.midi_manager.curP(),self.midi_manager.curX() + self.midi_manager.curL())

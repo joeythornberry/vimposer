@@ -1,4 +1,5 @@
 from os import get_terminal_size
+from vimposermidi.Console import Console
 from vimposermidi.NoteData import NoteData
 from vimposermidi.PixelList import PixelList
 from vimposermidi.MidiWindow import MidiWindow
@@ -20,6 +21,7 @@ class MidiManager:
     cursor: Cursor
     tempo: int
     filename: str
+    console: Console
 
     def __init__(self, frontend: VimposerFrontend, midi_viewport: MidiViewport, console_height: int, filename: str):
         """Init a MidiManager with default track and the given frontend."""
@@ -35,12 +37,19 @@ class MidiManager:
         self.cursor = Cursor(-1,-1)
         self.tempo = 120 # this is the default value if not explicitly set
         self.filename = filename
+        self.console = Console(console_height)
 
     def write_console(self):
         """Tell frontend to write helpful information to the console."""
+        padding = 5
+        manager_string = f"Vimposer {self.filename}. Tempo: {self.tempo}"
+        track_string = self.track_midi_manager.generate_console_string()
+        longest_length = max(len(manager_string), len(track_string))
+        manager_string += "".join([" " for _ in range(longest_length + padding - len(manager_string))]) + self.console.lines[0]
+        track_string += "".join([" " for _ in range(longest_length + padding - len(track_string))]) + self.console.lines[1]
         lines = [
-                f"Vimposer {self.filename}. Tempo: {self.tempo}",
-                self.track_midi_manager.generate_console_string()
+                manager_string,
+                track_string
             ]
         self.midi_window.write_console(lines, self.terminal_size[1])
 
