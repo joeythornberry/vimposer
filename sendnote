@@ -1,0 +1,3 @@
+#!/bin/bash
+./sendmidi --out 1 --note-on $1 $2 $3
+./sendmidi --out 1 --note-off $1 $2 $3
