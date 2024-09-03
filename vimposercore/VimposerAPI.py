@@ -139,3 +139,7 @@ class VimposerAPI:
 
     def shorten_cursor_note(self, amount: int):
         self.midi_manager.change_cursor_note_length(-amount)
+
+    def close(self):
+        self.midi_manager.midi_window.frontend.close()
+        self.midi_player.close_player()

@@ -26,4 +26,4 @@ open_midi_file(f"{argv[1]}", v.save_note, v.save_tempo, v.get_chars_per_quarter_
 
 v.after_action_hook()
 v.km.listen(v.midi_manager.midi_window.frontend.s.getkey)
-v.midi_manager.midi_window.frontend.close()
+v.close()
