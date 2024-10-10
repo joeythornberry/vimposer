@@ -35,6 +35,8 @@ def init(v: VimposerAPI):
 
     v.km.map("W", v.save)
 
+    v.km.map(" ", v.toggle_playing)
+
 
     v.km.map("V", v.set_current_track_velocity)
 
