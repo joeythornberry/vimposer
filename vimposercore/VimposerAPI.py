@@ -1,5 +1,5 @@
 from vimposercore.KeyboardManager import KeyboardManager
-from vimposercore.LinuxMidiPlayer import LinuxMidiPlayer
+from vimposercore.MidiPlayer import MidiPlayer
 from vimposermidi.MidiViewport import MidiViewport
 from vimposermidi.VimposerFrontend import VimposerFrontend
 from vimposermidi.MidiManager import MidiManager
@@ -30,7 +30,7 @@ class VimposerAPI:
         self.midi_manager.tempo = mpq_to_bpm(new_tempo)
 
     def after_action_hook(self):
-        # self.play_cursor_note()
+        self.play_cursor_note()
         self.midi_manager.write_console()
 
     def log(self, msg):
@@ -39,8 +39,7 @@ class VimposerAPI:
     def __init__(self, frontend: VimposerFrontend, midi_viewport: MidiViewport, filename: str):
         self.km = KeyboardManager(self.after_action_hook, self.send_keys)
         self.midi_manager = MidiManager(frontend, midi_viewport, 2, filename)
-        self.midi_player = LinuxMidiPlayer()
-        self.midi_player.initialize_player()
+        self.midi_player = MidiPlayer()
         self.log("Welcome to Vimposer.")
         self.log("Happy Composing!")
 
@@ -142,8 +141,3 @@ class VimposerAPI:
 
     def close(self):
         self.midi_manager.midi_window.frontend.close()
-        self.midi_player.close_player()
-
-    def toggle_playing(self, _: int):
-        self.midi_player.toggle_playing(self.midi_manager.filename)
-        self.log(str(self.midi_player.play_file_process))
