@@ -3,6 +3,7 @@ import time
 import queue
 import threading
 from dataclasses import dataclass
+import subprocess
 
 @dataclass
 class NoteMessage:
@@ -18,9 +19,30 @@ class MidiPlayer():
     def __init__(self):
         self.queue = queue.Queue()
         threading.Thread(target=self.listen, daemon=True).start()
+
+        self.player = None
         self.midiout = rtmidi.MidiOut()
-        self.midiout.open_port(1)
+
+        port_num = -1
+        for i, name in enumerate(self.midiout.get_ports()):
+            if "vimposerMIDIport" in name:
+                port_num = i
+        if port_num < 0: raise Exception("MIDI Player Error: Port does not exist.")
+        self.midiout.open_port(port_num)
+
         self.waiting_messages: list[NoteMessage] = []
+
+    def play_file(self, filename: str):
+        """Start playing the given MIDI file in the background."""
+        cmd = f"fluidsynth --no-shell --no-midi-in --reverb no VintageDreamsWaves-v2.sf3 {filename}"
+        if self.player != None: self.player.terminate()
+        self.player = subprocess.Popen(cmd.split(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    def stop_playing(self):
+        """If a MIDI file is playing in the background, stop it."""
+        if self.player == None: return
+        self.player.terminate()
+        self.player = None
 
     def play_note(self, instrument: int, pitch: int, velocity: int):
         """Play a note with the given attributes."""

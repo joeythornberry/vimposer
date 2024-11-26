@@ -41,3 +41,5 @@ def init(v: VimposerAPI):
 
     v.km.map("T", v.set_tempo)
 
+    v.km.map(" ", v.play_file)
+

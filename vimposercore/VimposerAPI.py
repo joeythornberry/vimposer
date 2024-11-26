@@ -37,9 +37,9 @@ class VimposerAPI:
         self.midi_manager.console.log(msg)
 
     def __init__(self, frontend: VimposerFrontend, midi_viewport: MidiViewport, filename: str):
-        self.km = KeyboardManager(self.after_action_hook, self.send_keys)
-        self.midi_manager = MidiManager(frontend, midi_viewport, 2, filename)
         self.midi_player = MidiPlayer()
+        self.km = KeyboardManager(self.after_action_hook, self.send_keys, self.midi_player.stop_playing)
+        self.midi_manager = MidiManager(frontend, midi_viewport, 2, filename)
         self.log("Welcome to Vimposer.")
         self.log("Happy Composing!")
 
@@ -141,3 +141,6 @@ class VimposerAPI:
 
     def close(self):
         self.midi_manager.midi_window.frontend.close()
+
+    def play_file(self, _):
+        self.midi_player.play_file(self.midi_manager.filename)

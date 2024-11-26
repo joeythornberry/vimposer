@@ -3,15 +3,17 @@ from sys import prefix
 
 class KeyboardManager:
 
-    def __init__(self, after_action_hook, display_keys = lambda msg: msg):
+    def __init__(self, after_action_hook, display_keys = lambda msg: msg, on_clear = lambda: 0):
         self.prefix = ""
         self.keys = ""
         self.maps = {}
         self.display_keys = display_keys
         self.after_action_hook = after_action_hook
         self.getch = None
+        self.on_clear = on_clear
 
     def clear(self):
+        self.on_clear()
         self.prefix = ""
         self.keys = ""
 
