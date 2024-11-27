@@ -63,6 +63,10 @@ class MidiPlayer():
                 self.waiting_messages.remove(message)
 
     def send_note_on(self, message: NoteMessage):
+            # we just use channel 0 for all of these
+            # instrument change is PROGRAM_CHANGE (0xc0) followed by instrument id
+            instrument_change = [0xc0, message.instrument]
+            self.midiout.send_message(instrument_change)
             note_on = [0x90, message.pitch, message.velocity]
             self.midiout.send_message(note_on)
 
