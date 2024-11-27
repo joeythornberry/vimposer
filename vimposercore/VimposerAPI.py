@@ -42,6 +42,7 @@ class VimposerAPI:
         self.midi_manager = MidiManager(frontend, midi_viewport, 2, filename)
         self.log("Welcome to Vimposer.")
         self.log("Happy Composing!")
+        # self.midi_manager.write_console()
 
     def play_cursor_note(self):
         t = self.midi_manager.track_midi_manager.tracks[self.midi_manager.curT()]
@@ -140,6 +141,7 @@ class VimposerAPI:
         self.midi_manager.change_cursor_note_length(-amount)
 
     def close(self):
+        self.midi_player.close()
         self.midi_manager.midi_window.frontend.close()
 
     def play_file(self, _):

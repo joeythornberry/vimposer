@@ -23,6 +23,13 @@ class MidiPlayer():
         self.player = None
         self.midiout = rtmidi.MidiOut()
 
+        midi_port_command = "fluidsynth --port vimposerMIDIport VintageDreamsWaves-v2.sf3"
+        self.midi_port = subprocess.Popen(midi_port_command.split(), stdin=subprocess.PIPE)
+        
+        self.waiting_messages: list[NoteMessage] = []
+
+    def connect_to_midi_port(self):
+        time.sleep(1)
         port_num = -1
         for i, name in enumerate(self.midiout.get_ports()):
             if "vimposerMIDIport" in name:
@@ -30,7 +37,9 @@ class MidiPlayer():
         if port_num < 0: raise Exception("MIDI Player Error: Port does not exist.")
         self.midiout.open_port(port_num)
 
-        self.waiting_messages: list[NoteMessage] = []
+    def close(self):
+        del self.midiout
+        self.midi_port.terminate()
 
     def play_file(self, filename: str):
         """Start playing the given MIDI file in the background."""
