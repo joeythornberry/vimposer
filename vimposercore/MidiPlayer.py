@@ -24,7 +24,7 @@ class MidiPlayer():
         self.player = None
         self.midiout = rtmidi.MidiOut()
 
-        midi_port_command = "fluidsynth --port vimposerMIDIport VintageDreamsWaves-v2.sf3"
+        midi_port_command = "fluidsynth --port vimposerMIDIport soundfont"
         self.midi_port = subprocess.Popen(midi_port_command.split(), stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         
         self.waiting_messages: list[NoteMessage] = []
@@ -44,7 +44,7 @@ class MidiPlayer():
 
     def play_file(self, filename: str):
         """Start playing the given MIDI file in the background."""
-        cmd = f"fluidsynth --no-shell --no-midi-in --reverb no VintageDreamsWaves-v2.sf3 {filename}"
+        cmd = f"fluidsynth --no-shell --no-midi-in --reverb no soundfont {filename}"
         if self.player != None: self.player.terminate()
         self.player = subprocess.Popen(cmd.split(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 

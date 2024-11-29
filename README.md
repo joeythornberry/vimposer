@@ -54,3 +54,6 @@ _If the above commands follow a number, they will be performed that number of ti
 `<number>V` : Set the velocity of the current track to `<number>`
 
 `<number>T` : Set the tempo of the MIDI file to `<number>`
+
+## Soundfonts
+This project uses Fluidsynth to play MIDI sounds. Fluidsynth relies on Soundfont files, which provide sets of instruments for Fluidsynth to use. Vimposer will use the Soundfont stored in the "soundfont" file. The current default Soundfont is the Roland SC-55.
