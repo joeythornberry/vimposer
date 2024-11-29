@@ -7,15 +7,21 @@ This repository is a demo version - it will require much refactoring to perform 
 If you have questions or would like to contribute to this project, email me at lewis.thornberry@christendom.edu.
 
 ## Installation
+
+### Debian-based distributions (e.g., Ubuntu)
+Download and run a Debian installer from the [Releases page](https://github.com/joeythornberry/vimposer-py/releases)
+
+### Other Linux distributions
 ```
 sudo apt install fluidsynth
 git clone https://github.com/joeythornberry/vimposer-py
 cd vimposer-py
+./pose new.mid
 ```
 
 ## Usage
 ```
-./pose new.mid
+pose new.mid
 ```
 
 ## Controls (can be edited in config/config.py)
