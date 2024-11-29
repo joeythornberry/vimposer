@@ -1,3 +1,4 @@
+from sys import stdout
 import rtmidi
 import time
 import queue
@@ -24,7 +25,7 @@ class MidiPlayer():
         self.midiout = rtmidi.MidiOut()
 
         midi_port_command = "fluidsynth --port vimposerMIDIport VintageDreamsWaves-v2.sf3"
-        self.midi_port = subprocess.Popen(midi_port_command.split(), stdin=subprocess.PIPE)
+        self.midi_port = subprocess.Popen(midi_port_command.split(), stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         
         self.waiting_messages: list[NoteMessage] = []
 

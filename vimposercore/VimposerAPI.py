@@ -42,7 +42,6 @@ class VimposerAPI:
         self.midi_manager = MidiManager(frontend, midi_viewport, 2, filename)
         self.log("Welcome to Vimposer.")
         self.log("Happy Composing!")
-        # self.midi_manager.write_console()
 
     def play_cursor_note(self):
         t = self.midi_manager.track_midi_manager.tracks[self.midi_manager.curT()]
@@ -129,7 +128,8 @@ class VimposerAPI:
         self.midi_manager.shift_across(amount)
 
     def create_track(self, starting_note_p: int = 60, starting_note_x: int = 0, starting_note_l: int = 6, track_velocity: int = 100, track_instrument: int = 0):
-        self.midi_manager.create_track(starting_note_p, starting_note_x, starting_note_l, track_velocity, track_instrument)
+        #self.midi_manager.create_track(starting_note_p, starting_note_x, starting_note_l, track_velocity, track_instrument)
+        self.midi_manager.create_track(starting_note_p=starting_note_p, starting_note_x=starting_note_x, starting_note_l=starting_note_l, track_velocity=track_velocity, track_instrument=track_instrument)
 
     def delete_current_track(self, _):
         self.midi_manager.delete_current_track()

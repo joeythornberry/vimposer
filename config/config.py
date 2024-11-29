@@ -23,7 +23,7 @@ def init(v: VimposerAPI):
     v.km.map("J", lambda amount : v.shift_window_vertical(-1 * amount))
     v.km.map("K", lambda amount : v.shift_window_vertical(amount))
 
-    v.km.map("tn",v.create_track)
+    v.km.map("tn", lambda _ : v.create_track(track_instrument=0, track_velocity=100))
     v.km.map("tk",v.change_track_up)
     v.km.map("tj",v.change_track_down)
     v.km.map("tx",v.delete_current_track)
