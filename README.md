@@ -11,7 +11,7 @@ If you have questions or would like to contribute to this project, email me at l
 sudo apt install fluidsynth
 git clone https://github.com/joeythornberry/vimposer-py
 cd vimposer-py
-chmod +x vimposer-py/pose
+chmod +x pose
 ```
 
 ## Usage
