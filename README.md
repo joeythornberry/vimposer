@@ -21,24 +21,37 @@ chmod +x vimposer-py/pose
 
 ## Controls (can be edited in config/config.py)
 `A`,`F`,`S`,`D` : Create a new note before, after, above, or below the cursor note
+
 `a`,`f`,`s`,`d` : Move the cursor to a different note
+
 `h`,`l`,`j`,`k` : Move the current cursor note
+
 `H`,`L`,`J`,`K` : Move the viewport
+
 `i` : Make the cursor note shorter
+
 `o` : Make the cursor note longer
+
 `x` : Delete the cursor note
 
-If the above commands follow a number, they will be performed that number of times: for example, `5o` will lengthen the current note by 5 divisions.
+_If the above commands follow a number, they will be performed that number of times: for example, `5o` will lengthen the current note by 5 divisions._
 
 `W` : Save
+
 `Q` : Quit (remember to save first)
+
 `<Space>` : Start playback (remember to save first)
+
 `<Esc>` : Stop playback and reset current command
 
 `tn` : Create a new track
+
 `tj`, `tk` : Change the current track
+
 `tx` : Delete the current track
 
 `<number>I` : Set the MIDI instrument of the current track to `<number>`
+
 `<number>V` : Set the velocity of the current track to `<number>`
+
 `<number>T` : Set the tempo of the MIDI file to `<number>`
