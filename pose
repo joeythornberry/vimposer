@@ -1,2 +1,1 @@
-source env_pose/bin/activate
 python3 main.py $1
