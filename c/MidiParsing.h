@@ -41,7 +41,7 @@ int parse_event(
 	current_time += dt;
 
 	uint8_t event_code = read8(midifile);
-	printf("%x\n", event_code);
+	//printf("%x\n", event_code);
 
 	if (event_code == 0xFF) {
 		uint8_t meta_event_type = read8(midifile);
@@ -50,7 +50,7 @@ int parse_event(
 		uint8_t SET_TEMPO = 0x51;
 		if (meta_event_type == SET_TEMPO && event_length == 3) {
 			uint32_t new_tempo = (read8(midifile) << 16) | (read8(midifile) << 8) | read8(midifile);
-			printf("new tempo: %d\n", new_tempo);
+	//		printf("new tempo: %d\n", new_tempo);
 			export_functions->export_tempo(new_tempo);
 		} else {
 			for (int i = 0; i < event_length; i++) read8(midifile); // skip data
@@ -147,14 +147,14 @@ int parse_midi_file(MidiFile * midifile, ExportFunctions * export_functions, uin
 	uint16_t format = read16(midifile);
 	uint16_t ntrks = read16(midifile);
 	uint16_t division = read16(midifile);
-	printf("division: %d\n", division);
+	//printf("division: %d\n", division);
 
 	int is_ticks_mode = (division & (1 << 15)) == 0;
 
 	uint16_t base_unit_of_time = 1;
 
 	if (is_ticks_mode) base_unit_of_time = division / chars_per_quarter_note; // 32nd note
-	printf("base time unit: %d\n", base_unit_of_time);
+	//printf("base time unit: %d\n", base_unit_of_time);
 
 	// we only know how to read 6-byte headers, so toss any extra bytes
 	for (uint32_t i = header_length; i > 6; i--) read8(midifile);
