@@ -1,4 +1,5 @@
 from collections.abc import Callable
+import os.path
 
 def open_midi_file(filename: str, save_note: Callable[[int, int, int, int, int, int], None], save_tempo: Callable[[int], None], chars_per_quarter_note: int) -> int:
     from ctypes import CFUNCTYPE, c_int8, c_int32, cdll, CDLL, c_wchar_p
@@ -12,8 +13,7 @@ def open_midi_file(filename: str, save_note: Callable[[int, int, int, int, int, 
     def save_tempo_callback(new_tempo: int):
         save_tempo(new_tempo)
 
-    #load_midi_file(filename, save_note_callback, chars_per_quarter_note)
-    library_name = "./c/libmidiloader.so"
+    library_name = f"{os.path.dirname(os.path.abspath(__file__))}/../c/libmidiloader.so"
     cdll.LoadLibrary(library_name)
     libmidiloader = CDLL(library_name)
 
