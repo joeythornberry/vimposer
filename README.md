@@ -9,13 +9,13 @@ If you have questions or would like to contribute to this project, email me at l
 ## Installation
 
 ### Debian-based distributions (e.g., Ubuntu)
-Download and run a Debian installer from the [Releases page](https://github.com/joeythornberry/vimposer-py/releases)
+Download and run a Debian installer from the [Releases page](https://github.com/joeythornberry/vimposer/releases)
 
 ### Other Linux distributions
 ```
 sudo apt install fluidsynth
-git clone https://github.com/joeythornberry/vimposer-py
-cd vimposer-py
+git clone https://github.com/joeythornberry/vimposer
+cd vimposer
 ./pose new.mid
 ```
 
