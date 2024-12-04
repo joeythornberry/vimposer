@@ -24,7 +24,9 @@ cd vimposer
 pose new.mid
 ```
 
-## Controls (can be edited in config/config.py)
+## Controls 
+_You can edit these keybinds in config/config.py_
+
 `A`,`F`,`S`,`D` : Create a new note before, after, above, or below the cursor note
 
 `a`,`f`,`s`,`d` : Move the cursor to a different note
